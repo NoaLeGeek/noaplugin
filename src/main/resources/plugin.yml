@@ -1,0 +1,10 @@
+name: NoaPlugin
+version: @version@
+main: fr.noalegeek68.noaplugin.NoaPlugin
+api-version: 1.17
+authors: [NoaLeGeek68]
+commands:
+  test:
+    description: This is a test command.
+  alert:
+    description:
