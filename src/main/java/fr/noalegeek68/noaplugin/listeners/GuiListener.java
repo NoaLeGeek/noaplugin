@@ -1,4 +1,4 @@
-package fr.noalegeek68.noaplugin.listener;
+package fr.noalegeek68.noaplugin.listeners;
 
 import fr.noalegeek68.noaplugin.enums.Items;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
@@ -10,21 +10,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Listeners implements Listener {
+public class GuiListener implements Listener {
     private final Inventory guiKits = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Kits");
     private final Map<Player, Boolean> knightMap = new HashMap<>();
 
@@ -41,7 +37,6 @@ public class Listeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        Action action = event.getAction();
         ItemStack itemStack = event.getItem();
         if(itemStack != null) {
             if (itemStack.isSimilar(Items.KITS.itemStack)) {
@@ -58,16 +53,6 @@ public class Listeners implements Listener {
                 }
                 player.openInventory(guiKits);
             }
-        }
-    }
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event){
-        Player player = (Player) event.getPlayer();
-        if(player.getInventory().getHelmet() != null && player.getInventory().getHelmet().isSimilar(new ItemBuilder(Material.DIAMOND_HELMET)
-                .build())) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 1));
-        } else {
-            if(player.hasPotionEffect(PotionEffectType.SPEED)) player.removePotionEffect(PotionEffectType.SPEED);
         }
     }
     @EventHandler

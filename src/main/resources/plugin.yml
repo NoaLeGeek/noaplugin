@@ -6,9 +6,16 @@ authors: [NoaLeGeek68]
 commands:
   test:
     description: This is a test command.
+    permission: noaplugin.test
   alert:
     description: Sends a message in dark red to the whole server. You can use "&" to use different colors.
+    permission: noaplugin.alert
   broadcast:
     description: Sends a message with the player's nickname to the whole server. You can use "&" to use different colors.
+    permission: noaplugin.broadcast
   spawn:
     description: Teleports the player to the world spawn. You can change the spawn point with the command /setworldspawn.
+    permission: noaplugin.spawn
+  craft:
+    description: Opens the interface of a workbench to yourself or to someone else.
+    permission: noaplugin.craft

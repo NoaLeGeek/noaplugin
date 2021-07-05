@@ -1,5 +1,6 @@
 package fr.noalegeek68.noaplugin.commands;
 
+import fr.noalegeek68.noaplugin.utils.CommandUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +14,7 @@ public class TestCommand implements CommandExecutor {
             player.sendMessage("§aDites bienvenue à " + player.getDisplayName() + " sur le serveur " + player.getServer().getName() + ".");
             return true;
         }
+        CommandUtils.senderError(sender);
         return false;
     }
 }

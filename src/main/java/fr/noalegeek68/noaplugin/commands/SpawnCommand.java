@@ -1,5 +1,6 @@
 package fr.noalegeek68.noaplugin.commands;
 
+import fr.noalegeek68.noaplugin.utils.CommandUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -17,6 +18,7 @@ public class SpawnCommand implements CommandExecutor {
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.GREEN + "Vous venez d'être téléporté au spawn du monde.");
             return true;
         }
+        CommandUtils.senderError(sender);
         return false;
     }
 }

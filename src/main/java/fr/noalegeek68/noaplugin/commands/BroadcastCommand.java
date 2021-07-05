@@ -1,5 +1,6 @@
 package fr.noalegeek68.noaplugin.commands;
 
+import fr.noalegeek68.noaplugin.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,6 +15,7 @@ public class BroadcastCommand implements CommandExecutor {
             Player player = (Player) sender;
             if(args.length == 0){
                 player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.RED + "ERREUR ! Il manque des arguments : " + ChatColor.RESET + "/" + command.getName() + " <message>" + ChatColor.RED + ".");
+                return false;
             } else {
                 StringBuilder broadcast = new StringBuilder();
                 for(String part : args) broadcast.append(part.replace("&","§")).append(" ");
@@ -21,6 +23,7 @@ public class BroadcastCommand implements CommandExecutor {
                 return true;
             }
         }
+        CommandUtils.senderError(sender);
         return false;
     }
 }
