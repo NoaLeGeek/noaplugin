@@ -7,4 +7,8 @@ commands:
   test:
     description: This is a test command.
   alert:
-    description:
+    description: Sends a message in dark red to the whole server. You can use "&" to use different colors.
+  broadcast:
+    description: Sends a message with the player's nickname to the whole server. You can use "&" to use different colors.
+  spawn:
+    description: Teleports the player to the world spawn. You can change the spawn point with the command /setworldspawn.

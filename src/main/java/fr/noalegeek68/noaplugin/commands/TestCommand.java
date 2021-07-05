@@ -10,7 +10,6 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player){
             Player player = (Player) sender;
-            player.sendMessage(player.getDisplayName() + " " + player.getName());
             player.sendMessage("§aDites bienvenue à " + player.getDisplayName() + " sur le serveur " + player.getServer().getName() + ".");
             return true;
         }
