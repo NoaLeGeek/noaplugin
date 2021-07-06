@@ -22,3 +22,6 @@ commands:
   enderchest:
     description: Opens the contents of the enderchest of oneself, of someone or make someone open the contents of someone.
     permission: noaplugin.enderchest
+  invsee:
+    description: Opens the inventory of oneself, of someone or makes someone open the inventory of someone.
+    permission: noaplugin.invsee

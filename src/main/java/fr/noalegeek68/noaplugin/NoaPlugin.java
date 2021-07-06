@@ -42,6 +42,7 @@ public final class NoaPlugin extends JavaPlugin {
         registerCommand("spawn", new SpawnCommand(),"s");
         registerCommand("craft", new CraftCommand(), "c");
         registerCommand("enderchest", new EnderchestCommand(), "ec","enderc","echest");
+        registerCommand("invsee", new InvseeCommand(), "inventorysee","inventorys","invs");
     }
 
     public void registerCommand(@NotNull String commandName, @NotNull CommandExecutor commandExecutor, @Nullable String... commandAliases){
