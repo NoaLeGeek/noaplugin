@@ -13,12 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class NoaPlugin extends JavaPlugin {
 
     public static final String pluginPrefix = String.format("%s[%sNoaPlugin%s] ", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY);
-    public static final String pluginID = "noaplugin";
-    public static final String pluginPrefixPerm = pluginID + ".";
+    public static final Map<UUID, Boolean> moderationMode = new HashMap<>();
     private static NoaPlugin plugin;
 
     @Override
@@ -54,9 +56,12 @@ public final class NoaPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println("[NoaPlugin] Le plugin a été éteint.");
+        /*for (UUID uuid : moderationMode.keySet()) {
+            boolean b = moderationMode.get(uuid);
+            // Unvanish the person
+        }*/
     }
 
-    public static NoaPlugin getPlugin(){
-        return plugin;
-    }
+    public static NoaPlugin getPlugin(){ return plugin; }
+    public static String getPermission(){ return "noaplugin."; }
 }

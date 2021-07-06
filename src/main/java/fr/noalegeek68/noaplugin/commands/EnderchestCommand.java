@@ -13,51 +13,47 @@ import org.jetbrains.annotations.NotNull;
 public class EnderchestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player) {
-            Player player = (Player) sender;
-            switch (args.length) {
-                case 0:
-                    player.openInventory(player.getEnderChest());
-                    return true;
-                case 1:
-                    if(!player.hasPermission(NoaPlugin.pluginPrefixPerm + command.getName())) {
-                        CommandUtils.permissionError(player);
-                        return false;
-                    }
-                    Player enderchest = Bukkit.getPlayer(args[0]);
-                    if(enderchest == null) {
-                        player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté.");
-                        return false;
-                    }
-                    player.openInventory(enderchest.getEnderChest());
-                    return true;
-                case 2:
-                    if(!player.hasPermission(NoaPlugin.pluginPrefixPerm + command.getName())) {
-                        CommandUtils.permissionError(player);
-                        return false;
-                    }
-                    enderchest = Bukkit.getPlayer(args[0]);
-                    Player target = Bukkit.getPlayer(args[1]);
-                    if(enderchest == null) {
-                        player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté.");
-                        return false;
-                    }
-                    if(target == null) {
-                        player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[1] + " n'est pas connecté.");
-                        return false;
-                    }
-                    enderchest.openInventory(target.getEnderChest());
-                    return true;
-                default:
-                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
-                            "/" + command.getName() + " <enderchest>" + ChatColor.DARK_GRAY + "\n" +
-                            "<enderchest>" + ChatColor.GRAY + " correspondra à l'enderchest du joueur." + ChatColor.RED + "\n" +
-                            ChatColor.RESET + "/" + command.getName() + " <enderchest> <pseudo>" + ChatColor.DARK_GRAY + "\n" +
-                            "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'enderchest.");
-                    return false;
-            }
+        if (!(sender instanceof Player)) {
+            CommandUtils.senderError(sender);
+            return false;
         }
-        CommandUtils.senderError(sender);
-        return false;
+        Player player = (Player) sender;
+        if (!player.hasPermission(NoaPlugin.getPermission() + command.getName() + ".use")) {
+            CommandUtils.permissionError(player);
+            return false;
+        }
+        switch (args.length) {
+            case 0:
+                player.openInventory(player.getEnderChest());
+                return true;
+            case 1:
+                Player enderchest = Bukkit.getPlayer(args[0]);
+                if (enderchest == null) {
+                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté ou n'existe pas.");
+                    return false;
+                }
+                player.openInventory(enderchest.getEnderChest());
+                return true;
+            case 2:
+                enderchest = Bukkit.getPlayer(args[0]);
+                Player target = Bukkit.getPlayer(args[1]);
+                if (enderchest == null) {
+                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté ou n'existe pas.");
+                    return false;
+                }
+                if (target == null) {
+                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[1] + " n'est pas connecté ou n'existe pas.");
+                    return false;
+                }
+                enderchest.openInventory(target.getEnderChest());
+                return true;
+            default:
+                player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
+                        "/" + command.getName() + " <enderchest>" + ChatColor.DARK_GRAY + "\n" +
+                        "<enderchest>" + ChatColor.GRAY + " correspondra à l'enderchest du joueur." + ChatColor.RED + "\n" +
+                        ChatColor.RESET + "/" + command.getName() + " <enderchest> <pseudo>" + ChatColor.DARK_GRAY + "\n" +
+                        "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'enderchest.");
+                return false;
+        }
     }
 }

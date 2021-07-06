@@ -1,6 +1,7 @@
 package fr.noalegeek68.noaplugin.listeners;
 
-import fr.noalegeek68.noaplugin.enums.Items;
+import fr.noalegeek68.noaplugin.enums.GUI;
+import fr.noalegeek68.noaplugin.enums.ItemsGUI;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemStackUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GuiListener implements Listener {
-    private final Inventory guiKits = Bukkit.createInventory(null, 27, ChatColor.GREEN + "Kits");
+   
     private final Map<Player, Boolean> knightMap = new HashMap<>();
 
     @EventHandler
@@ -29,9 +30,7 @@ public class GuiListener implements Listener {
         Player player = event.getPlayer();
         knightMap.put(player, false);
         player.getInventory().clear();
-        player.getInventory().setItem(4, new ItemBuilder(Material.CHEST)
-                .setDisplayName(ChatColor.GREEN + "Kits")
-                .build());
+        player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
         player.updateInventory();
     }
     @EventHandler
@@ -39,19 +38,19 @@ public class GuiListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
         if(itemStack != null) {
-            if (itemStack.isSimilar(Items.KITS.itemStack)) {
+            if (itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
                 event.setCancelled(true);
-                guiKits.setItem(13, new ItemBuilder(Material.IRON_SWORD)
+                GUI.KITS.inventory.setItem(13, new ItemBuilder(Material.IRON_SWORD)
                         .setDisplayName(ChatColor.DARK_GREEN + "Kit Chevalier")
                         .build());
-                for(int i = 0; i < 27; i++){
-                    if(guiKits.getItem(i) == null ||guiKits.getItem(i).getType().isAir()){
-                        guiKits.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                for(int slot = 0; slot < 27; slot++){
+                    if(GUI.KITS.inventory.getItem(slot) == null || GUI.KITS.inventory.getItem(slot).getType().isAir()){
+                        GUI.KITS.inventory.setItem(slot, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                                 .setDisplayName(ChatColor.DARK_GRAY + "Rien")
                                 .build());
                     }
                 }
-                player.openInventory(guiKits);
+                player.openInventory(GUI.KITS.inventory);
             }
         }
     }
@@ -62,16 +61,14 @@ public class GuiListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (ItemStackUtils.isAirOrNull(itemStack)) return;
         if(inventory == player.getInventory() && player.getGameMode().equals(GameMode.SURVIVAL)) {
-            if(itemStack.isSimilar(Items.KITS.itemStack)){
+            if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)){
                 event.setCancelled(true);
                 return;
             }
         }
-        if(inventory == guiKits) {
+        if(inventory == GUI.KITS.inventory) {
             event.setCancelled(true);
-            if(itemStack.isSimilar(new ItemBuilder(Material.IRON_SWORD)
-                    .setDisplayName(ChatColor.DARK_GREEN + "Kit Chevalier")
-                    .build())) {
+            if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
                 if (!knightMap.get(player)) {
                     player.getInventory().clear();
                     player.getInventory().setItem(EquipmentSlot.HEAD, new ItemStack(Material.IRON_HELMET));
@@ -81,9 +78,7 @@ public class GuiListener implements Listener {
                     player.getInventory().setItem(0, new ItemStack(Material.IRON_SWORD));
                     player.getInventory().setItem(1, new ItemStack(Material.BOW));
                     player.getInventory().setItem(2, new ItemStack(Material.ARROW, 64));
-                    player.getInventory().setItem(8, new ItemBuilder(Material.CHEST)
-                            .setDisplayName(ChatColor.GREEN + "Kits")
-                            .build());
+                    player.getInventory().setItem(8, ItemsGUI.KITS.itemStack);
                     knightMap.put(player, true);
                 } else {
                     player.getInventory().clear();

@@ -13,33 +13,32 @@ import org.jetbrains.annotations.NotNull;
 public class CraftCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(sender instanceof Player){
-            Player player = (Player) sender;
-            switch (args.length) {
-                case 0:
-                    player.openWorkbench(player.getLocation(), true);
-                    break;
-                case 1:
-                    if(!player.hasPermission(NoaPlugin.pluginPrefixPerm + command.getName())) {
-                        CommandUtils.permissionError(player);
-                        return false;
-                    }
-                    Player target = Bukkit.getPlayer(args[0]);
-                    if(target == null) {
-                        player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté.");
-                        return false;
-                    }
-                    target.openWorkbench(target.getLocation(), true);
-                    break;
-                default:
-                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
-                            "/craft <pseudo>" + ChatColor.DARK_GRAY + "\n" +
-                            "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'interface de l'établi.");
-                    break;
-            }
-            return true;
+        if (!(sender instanceof Player)) {
+            CommandUtils.senderError(sender);
+            return false;
         }
-        CommandUtils.senderError(sender);
-        return false;
+        Player player = (Player) sender;
+        if (!player.hasPermission(NoaPlugin.getPermission() + command.getName() + ".use")) {
+            CommandUtils.permissionError(player);
+            return false;
+        }
+        switch (args.length) {
+            case 0:
+                player.openWorkbench(player.getLocation(), true);
+                return true;
+            case 1:
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target == null) {
+                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté ou n'existe pas.");
+                    return false;
+                }
+                target.openWorkbench(target.getLocation(), true);
+                return true;
+            default:
+                player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
+                        "/craft <pseudo>" + ChatColor.DARK_GRAY + "\n" +
+                        "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'interface de l'établi.");
+                return false;
+        }
     }
 }

@@ -5,13 +5,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public enum Items {
+public enum ItemsGUI {
 
     KITS(new ItemBuilder(Material.CHEST).setDisplayName(ChatColor.GREEN + "Kits").build());
 
     public final ItemStack itemStack;
 
-    Items(ItemStack is) {
-        this.itemStack = is;
+    ItemsGUI(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 }
