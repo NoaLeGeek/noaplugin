@@ -124,11 +124,23 @@ public class ItemBuilder {
         setItemMeta(meta);
         return this;
     }
+    
+    public ItemBuilder addProtection(int level) {
+        return addEnchant(Enchantment.PROTECTION_EXPLOSIONS, level).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, level).addEnchant(Enchantment.PROTECTION_FIRE, level)
+                .addEnchant(Enchantment.PROTECTION_PROJECTILE, level);
+    }
 
     public ItemBuilder addItemFlag(ItemFlag flag) {
         ItemMeta meta = getItemMeta();
         meta.addItemFlags(flag);
         setItemMeta(meta);
+        return this;
+    }
+    
+    public ItemBuilder addItemFlag(ItemFlag... flags) {
+        for (ItemFlag flag : flags) {
+            addItemFlag(flag);
+        }
         return this;
     }
 
