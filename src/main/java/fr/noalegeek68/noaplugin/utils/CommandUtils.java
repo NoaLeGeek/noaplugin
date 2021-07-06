@@ -1,10 +1,10 @@
 package fr.noalegeek68.noaplugin.utils;
 
-import com.sun.istack.internal.NotNull;
 import fr.noalegeek68.noaplugin.NoaPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandUtils {
 

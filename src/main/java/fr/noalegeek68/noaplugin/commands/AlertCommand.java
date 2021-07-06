@@ -14,7 +14,8 @@ public class AlertCommand implements CommandExecutor {
         if(sender instanceof Player){
             Player player = (Player) sender;
             if(args.length == 0){
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.RED + "ERREUR ! Il manque des arguments : " + ChatColor.RESET + "/" + command.getName() + " <message>" + ChatColor.RED + ".");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
+                        "/" + command.getName() + " <message>");
                 return false;
             } else {
                 StringBuilder alert = new StringBuilder();

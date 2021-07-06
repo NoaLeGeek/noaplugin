@@ -61,7 +61,7 @@ public class GuiListener implements Listener {
         ItemStack itemStack = event.getCurrentItem();
         Player player = (Player) event.getWhoClicked();
         if (ItemStackUtils.isAirOrNull(itemStack)) return;
-        if(inventory == player.getInventory() && player.getGameMode() == GameMode.SURVIVAL) {
+        if(inventory == player.getInventory() && player.getGameMode().equals(GameMode.SURVIVAL)) {
             if(itemStack.isSimilar(Items.KITS.itemStack)){
                 event.setCancelled(true);
                 return;

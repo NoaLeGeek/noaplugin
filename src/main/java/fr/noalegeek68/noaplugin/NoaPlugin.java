@@ -1,7 +1,5 @@
 package fr.noalegeek68.noaplugin;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import fr.noalegeek68.noaplugin.commands.*;
 import fr.noalegeek68.noaplugin.listeners.GuiListener;
 import fr.noalegeek68.noaplugin.listeners.Listeners;
@@ -11,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -41,6 +41,7 @@ public final class NoaPlugin extends JavaPlugin {
         registerCommand("broadcast", new BroadcastCommand(),"bc","broadc","bcast");
         registerCommand("spawn", new SpawnCommand(),"s");
         registerCommand("craft", new CraftCommand(), "c");
+        registerCommand("enderchest", new EnderchestCommand(), "ec","enderc","echest");
     }
 
     public void registerCommand(@NotNull String commandName, @NotNull CommandExecutor commandExecutor, @Nullable String... commandAliases){

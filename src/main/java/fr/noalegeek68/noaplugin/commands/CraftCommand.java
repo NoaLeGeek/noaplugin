@@ -16,7 +16,7 @@ public class CraftCommand implements CommandExecutor {
             Player player = (Player) sender;
             switch (args.length) {
                 case 0:
-                    player.openInventory(player.getEnderChest());
+                    player.openWorkbench(player.getLocation(), true);
                     break;
                 case 1:
                     if(!player.hasPermission(NoaPlugin.pluginPrefixPerm + command.getName())) {
@@ -31,7 +31,9 @@ public class CraftCommand implements CommandExecutor {
                     target.openWorkbench(target.getLocation(), true);
                     break;
                 default:
-                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "/craft <pseudo>" + ChatColor.RED + ".");
+                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
+                            "/craft <pseudo>" + ChatColor.DARK_GRAY + "\n" +
+                            "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'interface de l'établi.");
                     break;
             }
             return true;

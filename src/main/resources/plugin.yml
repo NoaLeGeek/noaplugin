@@ -19,3 +19,6 @@ commands:
   craft:
     description: Opens the interface of a workbench to yourself or to someone else.
     permission: noaplugin.craft
+  enderchest:
+    description: Opens the contents of the enderchest of oneself, of someone or make someone open the contents of someone.
+    permission: noaplugin.enderchest
