@@ -34,6 +34,10 @@ processResources {
 }
 
 task copyFile(type: Copy){
+    /**
+     * Check if it's noalegeek68's computer
+     */
+    if(InetAddress.localHost.hostName != "DESKTOP-KN3O4H8") return
     from file("$buildDir/libs/noaplugin-1.0-SNAPSHOT.jar")
     into file("C:\\Users\\noacr\\OneDrive\\Bureau\\NoaPlugin serveur\\plugins")
 }
