@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class InventoryBuilder implements Listener {
 
-    private int size = 9;
+    private int size = 3;
     private final String name;
     private final List<ItemStack> itemStacks;
     private Consumer<InventoryClickEvent> clickEventConsumer = InventoryEvent::getInventory;
@@ -53,9 +53,7 @@ public class InventoryBuilder implements Listener {
     }
 
     public InventoryBuilder setSize(int size) {
-        if (size % 9 != 0 || size > 54) {
-            size = 36;
-        }
+        if(size > 6 || size < 1) size = 3;
         this.size = size;
         return this;
     }
@@ -72,7 +70,7 @@ public class InventoryBuilder implements Listener {
 
     public Inventory build() {
         Bukkit.getServer().getPluginManager().registerEvents(this, NoaPlugin.getPlugin());
-        Inventory inv = Bukkit.createInventory(null, size, name);
+        Inventory inv = Bukkit.createInventory(null, size * 9, name);
         itemStacks.forEach(inv::addItem);
         return inv;
     }
