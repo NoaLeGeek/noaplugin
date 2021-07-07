@@ -24,7 +24,7 @@ public class InvseeCommand implements CommandExecutor {
         }
         switch (args.length) {
             case 0:
-                // player.openInventory(player.getInventory());
+                player.openInventory(player.getInventory());
                 return true;
             case 1:
                 Player playerInventory = Bukkit.getPlayer(args[0]);
@@ -32,7 +32,7 @@ public class InvseeCommand implements CommandExecutor {
                     player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté ou n'existe pas.");
                     return false;
                 }
-                // player.openInventory(inventory.getInventory());
+                player.openInventory(playerInventory.getInventory());
                 return true;
             case 2:
                 playerInventory = Bukkit.getPlayer(args[0]);
@@ -45,12 +45,12 @@ public class InvseeCommand implements CommandExecutor {
                     player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[1] + " n'est pas connecté ou n'existe pas.");
                     return false;
                 }
-                // inventory.openInventory(target.getInventory());
+                playerInventory.openInventory(target.getInventory());
                 return true;
             default:
                 player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
                         "/" + command.getName() + " <inventaire>" + ChatColor.DARK_GRAY + "\n" +
-                        "<inventaire>" + ChatColor.GRAY + " correspondra à l'inventaire du joueur." + ChatColor.RED + "\n" +
+                        "<inventaire>" + ChatColor.GRAY + " correspondra à l'inventaire du joueur. \n" +
                         ChatColor.RESET + "/" + command.getName() + " <inventaire> <pseudo>" + ChatColor.DARK_GRAY + "\n" +
                         "<pseudo>" + ChatColor.GRAY + " correspondra à celui qui va voir l'inventaire.");
                 return false;

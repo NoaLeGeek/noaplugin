@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemBuilder {
 
@@ -24,7 +25,7 @@ public class ItemBuilder {
         return stack.getItemMeta();
     }
 
-    public ItemBuilder setColor(Color color) {
+    public ItemBuilder setLeatherArmorColor(Color color) {
         if(!(stack.getItemMeta() instanceof LeatherArmorMeta)) return this;
         LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
         meta.setColor(color);
@@ -109,12 +110,58 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setLore(List<String> lore) {
+        ItemMeta im = stack.getItemMeta();
+        im.setLore(lore);
+        stack.setItemMeta(im);
+        return this;
+    }
+
     public ItemBuilder setLore(String lore) {
         ArrayList<String> loreList = new ArrayList<>();
         loreList.add(lore);
         ItemMeta meta = getItemMeta();
         meta.setLore(loreList);
         setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder removeLoreLine(String line){
+        ItemMeta im = stack.getItemMeta();
+        List<String> lore = new ArrayList<>(im.getLore());
+        if(!lore.contains(line)) return this;
+        lore.remove(line);
+        im.setLore(lore);
+        stack.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder removeLoreLine(int index){
+        ItemMeta im = stack.getItemMeta();
+        List<String> lore = new ArrayList<>(im.getLore());
+        if(index<0||index>lore.size()) return this;
+        lore.remove(index);
+        im.setLore(lore);
+        stack.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder addLoreLine(String line){
+        ItemMeta im = stack.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        if(im.hasLore())lore = new ArrayList<>(im.getLore());
+        lore.add(line);
+        im.setLore(lore);
+        stack.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder addLoreLine(String line, int pos){
+        ItemMeta im = stack.getItemMeta();
+        List<String> lore = new ArrayList<>(im.getLore());
+        lore.set(pos, line);
+        im.setLore(lore);
+        stack.setItemMeta(im);
         return this;
     }
 
@@ -141,6 +188,24 @@ public class ItemBuilder {
         for (ItemFlag flag : flags) {
             addItemFlag(flag);
         }
+        return this;
+    }
+
+    public ItemBuilder addPage(String text) {
+        BookMeta bm = (BookMeta) stack.getItemMeta();
+        bm.addPage(text);
+        return this;
+    }
+
+    public ItemBuilder setAuthor(String author) {
+        BookMeta bm = (BookMeta) stack.getItemMeta();
+        bm.setAuthor(author);
+        return this;
+    }
+
+    public ItemBuilder setBookTitle(String title) {
+        BookMeta bm = (BookMeta) stack.getItemMeta();
+        bm.setTitle(title);
         return this;
     }
 

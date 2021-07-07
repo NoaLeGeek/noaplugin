@@ -53,7 +53,8 @@ public class InventoryBuilder implements Listener {
     }
 
     public InventoryBuilder setSize(int size) {
-        if(size > 6 || size < 1) size = 3;
+        if(size > 6) size = 6;
+        if(size < 1) size = 3;
         this.size = size;
         return this;
     }
@@ -69,7 +70,7 @@ public class InventoryBuilder implements Listener {
     }
 
     public Inventory build() {
-        Bukkit.getServer().getPluginManager().registerEvents(this, NoaPlugin.getPlugin());
+        Bukkit.getServer().getPluginManager().registerEvents(this, NoaPlugin.getInstance());
         Inventory inv = Bukkit.createInventory(null, size * 9, name);
         itemStacks.forEach(inv::addItem);
         return inv;

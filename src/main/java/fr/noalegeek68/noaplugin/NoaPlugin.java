@@ -1,6 +1,8 @@
 package fr.noalegeek68.noaplugin;
 
 import fr.noalegeek68.noaplugin.commands.*;
+import fr.noalegeek68.noaplugin.commands.moderation.ModCommand;
+import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
 import fr.noalegeek68.noaplugin.listeners.GuiListener;
 import fr.noalegeek68.noaplugin.listeners.Listeners;
 import org.bukkit.Bukkit;
@@ -12,16 +14,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class NoaPlugin extends JavaPlugin {
 
     public static final String pluginPrefix = String.format("%s[%sNoaPlugin%s] ", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY);
-    public static final Map<UUID, Boolean> moderationMode = new HashMap<>();
-    private static NoaPlugin plugin;
+    public static final ArrayList<UUID> arrayModerators = new ArrayList<>();
+    private static NoaPlugin instance;
 
     @Override
     public void onEnable() {
@@ -40,11 +39,13 @@ public final class NoaPlugin extends JavaPlugin {
     public void registerCommands(){
         registerCommand("test", new TestCommand(),"t");
         registerCommand("alert", new AlertCommand(),"a");
-        registerCommand("broadcast", new BroadcastCommand(),"bc","broadc","bcast");
+        registerCommand("broadcast", new BroadcastCommand(),"bc");
         registerCommand("spawn", new SpawnCommand(),"s");
         registerCommand("craft", new CraftCommand(), "c");
-        registerCommand("enderchest", new EnderchestCommand(), "ec","enderc","echest");
-        registerCommand("invsee", new InvseeCommand(), "inventorysee","inventorys","invs");
+        registerCommand("enderchest", new EnderchestCommand(), "ec");
+        registerCommand("invsee", new InvseeCommand(), "is");
+        registerCommand("mod", new ModCommand(), "m");
+        registerCommand("report", new ReportCommand(), "r");
     }
 
     public void registerCommand(@NotNull String commandName, @NotNull CommandExecutor commandExecutor, @Nullable String... commandAliases){
@@ -56,12 +57,8 @@ public final class NoaPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println("[NoaPlugin] Le plugin a été éteint.");
-        /*for (UUID uuid : moderationMode.keySet()) {
-            boolean b = moderationMode.get(uuid);
-            // Unvanish the person
-        }*/
     }
 
-    public static NoaPlugin getPlugin(){ return plugin; }
+    public static NoaPlugin getInstance(){ return instance; }
     public static String getPermission(){ return "noaplugin."; }
 }

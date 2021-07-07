@@ -22,8 +22,7 @@ public class SpawnCommand implements CommandExecutor {
             CommandUtils.permissionError(player);
             return false;
         }
-        Location spawn = new Location(player.getWorld(), player.getWorld().getSpawnLocation().getX(), player.getWorld().getSpawnLocation().getY(), player.getWorld().getSpawnLocation().getZ(), player.getWorld().getSpawnLocation().getYaw(), player.getWorld().getSpawnLocation().getPitch());
-        player.teleport(spawn);
+        player.teleport(new Location(player.getWorld(), player.getWorld().getSpawnLocation().getX(), player.getWorld().getSpawnLocation().getY(), player.getWorld().getSpawnLocation().getZ(), player.getWorld().getSpawnLocation().getYaw(), player.getWorld().getSpawnLocation().getPitch()));
         player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.GREEN + "Vous venez d'être téléporté au spawn du monde.");
         return true;
     }

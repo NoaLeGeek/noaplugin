@@ -9,43 +9,43 @@ commands:
     permission: noaplugin.test
     aliases:
       - "t"
-      - "te"
   alert:
     description: Sends a message in dark red to the whole server. You can use "&" to use different colors.
     permission: noaplugin.alert
     aliases:
       - "a"
-      - "al"
   broadcast:
     description: Sends a message with the player's nickname to the whole server. You can use "&" to use different colors.
     permission: noaplugin.broadcast
     aliases:
-      - "broadc"
       - "bc"
-      - "bcast"
   spawn:
     description: Teleports the player to the world spawn. You can change the spawn point with the command /setworldspawn.
     permission: noaplugin.spawn
     aliases:
       - "s"
-      - "sp"
   craft:
     description: Opens the interface of a workbench to yourself or to someone else.
     permission: noaplugin.craft
     aliases:
       - "c"
-      - "cr"
   enderchest:
     description: Opens the contents of the enderchest of oneself, of someone or make someone open the contents of someone.
     permission: noaplugin.enderchest
     aliases:
-      - "enderc"
       - "ec"
-      - "echest"
   invsee:
     description: Opens the inventory of oneself, of someone or makes someone open the inventory of someone.
     permission: noaplugin.invsee
     aliases:
-      - "inventorysee"
-      - "isee"
       - "is"
+  mod:
+    description: Activate the moderation mode. Disable if the player has already activated it.
+    permission: noaplugin.mod
+    aliases:
+      - "m"
+  report:
+    description: Opens an interface where you can postpone the player for a reason. If you choose "Other", you can write the reason in the chat.
+    permission: noaplugin.report
+    aliases:
+      - "r"
