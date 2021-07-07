@@ -7,9 +7,9 @@ import org.bukkit.inventory.Inventory;
 
 public enum GUI {
 
-    KITS(Bukkit.createInventory(null, 27, ChatColor.GREEN + "Kits")),
+    KITS(new InventoryBuilder(ChatColor.GREEN + "Kits", 3)),
     REPORT(new InventoryBuilder("Report").build()),
-    INVSEE(Bukkit.createInventory(null, 27, "Inventaire"));
+    INVSEE(new InventoryBuilder("Inventaire", 3));
 
     public final Inventory inventory;
 
