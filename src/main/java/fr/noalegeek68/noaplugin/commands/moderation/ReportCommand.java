@@ -28,6 +28,7 @@ public class ReportCommand implements CommandExecutor {
                     "<pseudo>" + ChatColor.GRAY + " correspondra au joueur.");
             return false;
         }
+
         return true;
     }
 }

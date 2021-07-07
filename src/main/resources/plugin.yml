@@ -4,11 +4,6 @@ main: fr.noalegeek68.noaplugin.NoaPlugin
 api-version: 1.17
 authors: [NoaLeGeek68]
 commands:
-  test:
-    description: This is a test command.
-    permission: noaplugin.test
-    aliases:
-      - "t"
   alert:
     description: Sends a message in dark red to the whole server. You can use "&" to use different colors.
     permission: noaplugin.alert

@@ -37,7 +37,6 @@ public final class NoaPlugin extends JavaPlugin {
     }
 
     public void registerCommands(){
-        registerCommand("test", new TestCommand(),"t");
         registerCommand("alert", new AlertCommand(),"a");
         registerCommand("broadcast", new BroadcastCommand(),"bc");
         registerCommand("spawn", new SpawnCommand(),"s");
