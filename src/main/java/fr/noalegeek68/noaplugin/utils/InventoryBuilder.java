@@ -28,7 +28,7 @@ public class InventoryBuilder implements Listener {
         this.itemStacks = new ArrayList<>();
     }
 
-    public InventoryBuilder(@NotNull String name, int rows) {
+    public InventoryBuilder(@NotNull String name, @NotNull int rows) {
         this.name = name;
         this.itemStacks = new ArrayList<>();
         this.setRows(rows);
@@ -53,8 +53,13 @@ public class InventoryBuilder implements Listener {
     }
 
     public InventoryBuilder setRows(int rows) {
-        if(rows > 6 || rows < 1) rows = 3;
+        if(rows > 6 || rows < 1) rows = 6;
         this.rows = rows;
+        return this;
+    }
+
+    public InventoryBuilder addItem(ItemStack itemStack) {
+        this.itemStacks.add(itemStack);
         return this;
     }
 
@@ -70,7 +75,7 @@ public class InventoryBuilder implements Listener {
 
     public Inventory build() {
         Bukkit.getServer().getPluginManager().registerEvents(this, NoaPlugin.getInstance());
-        Inventory inv = Bukkit.createInventory(null, size * 9, name);
+        Inventory inv = Bukkit.createInventory(null, rows * 9, name);
         itemStacks.forEach(inv::addItem);
         return inv;
     }
