@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 public class InventoryBuilder implements Listener {
 
-    private int size = 3;
-    private final String name;
+    private int rows = 3;
+    private String name;
     private final List<ItemStack> itemStacks;
     private Consumer<InventoryClickEvent> clickEventConsumer = InventoryEvent::getInventory;
     private boolean cancelEvent = false;
@@ -28,10 +28,10 @@ public class InventoryBuilder implements Listener {
         this.itemStacks = new ArrayList<>();
     }
 
-    public InventoryBuilder(@NotNull String name, @NotNull int size) {
+    public InventoryBuilder(@NotNull String name, int rows) {
         this.name = name;
         this.itemStacks = new ArrayList<>();
-        this.setSize(size);
+        this.setRows(rows);
     }
 
     public InventoryBuilder onClick(Consumer<InventoryClickEvent> eventConsumer) {
@@ -46,26 +46,25 @@ public class InventoryBuilder implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent event) {
-        if(event.getInventory().getSize() != size) return;
+        if(event.getInventory().getSize() != rows) return;
         if(!event.getView().getTitle().equalsIgnoreCase(name)) return;
         event.setCancelled(cancelEvent);
         this.clickEventConsumer.accept(event);
     }
 
-    public InventoryBuilder setSize(int size) {
-        if(size > 6) size = 6;
-        if(size < 1) size = 3;
-        this.size = size;
-        return this;
-    }
-
-    public InventoryBuilder addItem(ItemStack itemStack) {
-        this.itemStacks.add(itemStack);
+    public InventoryBuilder setRows(int rows) {
+        if(rows > 6 || rows < 1) rows = 3;
+        this.rows = rows;
         return this;
     }
 
     public InventoryBuilder addItems(ItemStack... itemStacks) {
         this.itemStacks.addAll(Arrays.asList(itemStacks));
+        return this;
+    }
+
+    public InventoryBuilder setName(String name) {
+        this.name = name;
         return this;
     }
 
