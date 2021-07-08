@@ -24,6 +24,12 @@ public class SpawnCommand implements CommandExecutor {
         }
         player.teleport(new Location(player.getWorld(), player.getWorld().getSpawnLocation().getX(), player.getWorld().getSpawnLocation().getY(), player.getWorld().getSpawnLocation().getZ(), player.getWorld().getSpawnLocation().getYaw(), player.getWorld().getSpawnLocation().getPitch()));
         player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[NoaPlugin] " + ChatColor.RESET + "" + ChatColor.GREEN + "Vous venez d'être téléporté au spawn du monde.");
+        /*public InventoryBuilder addItemsRow(int row, ItemStack... itemStacks){
+        for(int i = row; i < row * 9 + 1; i++) {
+            this.itemStacks.add(i - 1, itemStacks[i - 1]);
+        }
+        return this;
+    }*/
         return true;
     }
 }

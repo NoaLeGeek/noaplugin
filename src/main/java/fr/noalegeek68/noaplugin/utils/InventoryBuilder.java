@@ -28,8 +28,7 @@ public class InventoryBuilder implements Listener {
     private Consumer<InventoryOpenEvent> openEventConsumer = InventoryEvent::getInventory;
     private Consumer<InventoryEvent> updateEventConsumer;
     private BukkitRunnable runnable;
-    //1 Second
-    private int runnableTime = 20;
+    private int runnableTime = 20; // 20 ticks = 1 second
     private boolean cancelEvent = false;
 
     public InventoryBuilder(@NotNull String name) {
@@ -71,24 +70,21 @@ public class InventoryBuilder implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent event) {
-        if(event.getInventory().getSize() != getSize()) return;
-        if(!event.getView().getTitle().equalsIgnoreCase(name)) return;
+        if(event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
         event.setCancelled(cancelEvent);
         this.clickEventConsumer.accept(event);
     }
 
     @EventHandler
     private void onOpen(InventoryOpenEvent event) {
-        if(event.getInventory().getType() != InventoryType.CHEST) return;
-        if(event.getInventory().getSize() != getSize()) return;
-        if(!event.getView().getTitle().equalsIgnoreCase(name)) return;
+        if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 onTickUpdate(event);
             }
         };
-        runnable.runTaskTimer(MinemobsUtils.getInstance(), runnableTime, runnableTime);
+        runnable.runTaskTimer(NoaPlugin.getInstance(), runnableTime, runnableTime);
         this.openEventConsumer.accept(event);
     }
     
@@ -112,6 +108,33 @@ public class InventoryBuilder implements Listener {
 
     public InventoryBuilder addItems(ItemStack... itemStacks) {
         this.itemStacks.addAll(Arrays.asList(itemStacks));
+        return this;
+    }
+
+    public InventoryBuilder addItem(int slot, ItemStack itemStack){
+        this.itemStacks.add(slot, itemStack);
+        return this;
+    }
+
+    public InventoryBuilder addItem(ItemStack itemStack){
+        this.itemStacks.add(itemStack);
+        return this;
+    }
+
+    /*public InventoryBuilder setItemsRow(int row, ItemStack... itemStacks){
+        for(int i = row; i < row * 9 + 1; i++) {
+            this.itemStacks.set((i - 1), itemStacks[(i - 1)]);
+        }
+        return this;
+    }*/
+
+    public InventoryBuilder removeItems(ItemStack... itemStacks){
+        this.itemStacks.removeAll(Arrays.asList(itemStacks));
+        return this;
+    }
+
+    public InventoryBuilder removeItem(int slot){
+        this.itemStacks.remove(slot);
         return this;
     }
 

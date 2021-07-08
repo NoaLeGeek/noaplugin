@@ -1,8 +1,9 @@
 package fr.noalegeek68.noaplugin.listeners;
 
 import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.enums.GUI;
-import fr.noalegeek68.noaplugin.enums.ItemsGUI;
+import fr.noalegeek68.noaplugin.objects.GUI;
+import fr.noalegeek68.noaplugin.objects.ItemsGUI;
+import fr.noalegeek68.noaplugin.utils.InventoryBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemStackUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -60,17 +61,17 @@ public class Listeners implements Listener {
         if(itemStack != null) {
             if (itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
                 event.setCancelled(true);
-                GUI.KITS.inventory.setItem(13, new ItemBuilder(Material.IRON_SWORD)
+                GUI.KITS.inventoryBuilder.build().setItem(13, new ItemBuilder(Material.IRON_SWORD)
                         .setDisplayName(ChatColor.DARK_GREEN + "Kit Chevalier")
                         .build());
                 for(int slot = 0; slot < 27; slot++){
-                    if(GUI.KITS.inventory.getItem(slot) == null || GUI.KITS.inventory.getItem(slot).getType().isAir()){
-                        GUI.KITS.inventory.setItem(slot, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                    if(GUI.KITS.inventoryBuilder.build().getItem(slot) == null || GUI.KITS.inventoryBuilder.build().getItem(slot).getType().isAir()){
+                        GUI.KITS.inventoryBuilder.build().setItem(slot, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                                 .setDisplayName(ChatColor.DARK_GRAY + "Rien")
                                 .build());
                     }
                 }
-                player.openInventory(GUI.KITS.inventory);
+                player.openInventory(GUI.KITS.inventoryBuilder.build());
             }
         }
     }
@@ -86,7 +87,7 @@ public class Listeners implements Listener {
                 return;
             }
         }
-        if(inventory == GUI.KITS.inventory) {
+        if(inventory == GUI.KITS.inventoryBuilder.build()) {
             event.setCancelled(true);
             if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
                 if (!knightMap.get(player)) {
@@ -102,9 +103,7 @@ public class Listeners implements Listener {
                     knightMap.put(player, true);
                 } else {
                     player.getInventory().clear();
-                    player.getInventory().setItem(4, new ItemBuilder(Material.CHEST)
-                            .setDisplayName(ChatColor.GREEN + "Kits")
-                            .build());
+                    player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
                     knightMap.put(player, false);
                 }
                 player.closeInventory();

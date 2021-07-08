@@ -3,7 +3,6 @@ package fr.noalegeek68.noaplugin;
 import fr.noalegeek68.noaplugin.commands.*;
 import fr.noalegeek68.noaplugin.commands.moderation.ModCommand;
 import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
-import fr.noalegeek68.noaplugin.listeners.GuiListener;
 import fr.noalegeek68.noaplugin.listeners.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +22,11 @@ public final class NoaPlugin extends JavaPlugin {
     private static NoaPlugin instance;
 
     @Override
+    public void onLoad() {
+        instance = this;
+    }
+
+    @Override
     public void onEnable() {
         System.out.println("[NoaPlugin] Le plugin a été démarré.");
         registerListeners();
@@ -32,7 +36,6 @@ public final class NoaPlugin extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new GuiListener(), this);
         pluginManager.registerEvents(new Listeners(), this);
     }
 

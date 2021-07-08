@@ -1,4 +1,4 @@
-package fr.noalegeek68.noaplugin.enums;
+package fr.noalegeek68.noaplugin.objects;
 
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import org.bukkit.ChatColor;
