@@ -7,13 +7,13 @@ import org.bukkit.inventory.Inventory;
 
 public enum GUI {
 
-    KITS(new InventoryBuilder(ChatColor.GREEN + "Kits", 3).build()),
-    REPORT(new InventoryBuilder("Report").build()),
-    INVSEE(new InventoryBuilder("Inventaire", 3).build());
+    KITS(new InventoryBuilder(ChatColor.GREEN + "Kits", 3)),
+    REPORT(new InventoryBuilder("Report")),
+    INVSEE(new InventoryBuilder("Inventaire", 3));
 
-    public final Inventory inventory;
+    public final InventoryBuilder builder;
 
-    GUI(Inventory inventory){
-        this.inventory = inventory;
+    GUI(InventoryBuilder builder){
+        this.builder = builder;
     }
 }
