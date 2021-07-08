@@ -8,8 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,6 +26,10 @@ public class InventoryBuilder implements Listener {
     private final List<ItemStack> itemStacks;
     private Consumer<InventoryClickEvent> clickEventConsumer = InventoryEvent::getInventory;
     private Consumer<InventoryOpenEvent> openEventConsumer = InventoryEvent::getInventory;
+    private Consumer<InventoryEvent> updateEventConsumer;
+    private BukkitRunnable runnable;
+    //1 Second
+    private int runnableTime = 20;
     private boolean cancelEvent = false;
 
     public InventoryBuilder(@NotNull String name) {
@@ -46,6 +52,17 @@ public class InventoryBuilder implements Listener {
         this.clickEventConsumer = eventConsumer;
         return this;
     }
+    
+    public InventoryBuilder onUpdate(Consumer<InventoryEvent> eventConsumer) {
+        this.updateEventConsumer = eventConsumer;
+        return this;
+    }
+
+    public InventoryBuilder onUpdate(Consumer<InventoryEvent> eventConsumer, int time) {
+        this.updateEventConsumer = eventConsumer;
+        this.runnableTime = time;
+        return this;
+    }
 
     public InventoryBuilder setCancelled() {
         this.cancelEvent = !cancelEvent;
@@ -65,7 +82,26 @@ public class InventoryBuilder implements Listener {
         if(event.getInventory().getType() != InventoryType.CHEST) return;
         if(event.getInventory().getSize() != getSize()) return;
         if(!event.getView().getTitle().equalsIgnoreCase(name)) return;
+        this.runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                onTickUpdate(event);
+            }
+        };
+        runnable.runTaskTimer(MinemobsUtils.getInstance(), runnableTime, runnableTime);
         this.openEventConsumer.accept(event);
+    }
+    
+    private void onTickUpdate(InventoryEvent event) {
+        if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
+        this.updateEventConsumer.accept(event);
+    }
+
+    @EventHandler
+    private void onClose(InventoryCloseEvent event) {
+        if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
+        this.runnable.cancel();
+        this.runnable = null;
     }
 
     public InventoryBuilder setRows(int rows) {
