@@ -85,7 +85,7 @@ public class InventoryBuilder implements Listener {
                     onTickUpdate(event);
                 }
             };
-            runnable.runTaskTimer(MinemobsUtils.getInstance(), runnableTime, runnableTime);
+            runnable.runTaskTimer(NoaPlugin.getInstance(), runnableTime, runnableTime);
         }
         this.openEventConsumer.accept(event);
     }
