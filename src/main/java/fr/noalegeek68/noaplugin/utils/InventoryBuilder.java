@@ -78,16 +78,18 @@ public class InventoryBuilder implements Listener {
     @EventHandler
     private void onOpen(InventoryOpenEvent event) {
         if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
-        this.runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                onTickUpdate(event);
-            }
-        };
-        runnable.runTaskTimer(NoaPlugin.getInstance(), runnableTime, runnableTime);
+        if(runnable != null) {
+            this.runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    onTickUpdate(event);
+                }
+            };
+            runnable.runTaskTimer(MinemobsUtils.getInstance(), runnableTime, runnableTime);
+        }
         this.openEventConsumer.accept(event);
     }
-    
+
     private void onTickUpdate(InventoryEvent event) {
         if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
         this.updateEventConsumer.accept(event);
@@ -96,6 +98,7 @@ public class InventoryBuilder implements Listener {
     @EventHandler
     private void onClose(InventoryCloseEvent event) {
         if(event.getInventory().getType() != InventoryType.CHEST || event.getInventory().getSize() != getSize() || !event.getView().getTitle().equalsIgnoreCase(name)) return;
+        if(runnable == null) return;
         this.runnable.cancel();
         this.runnable = null;
     }
