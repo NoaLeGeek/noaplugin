@@ -1,9 +1,9 @@
 package fr.noalegeek68.noaplugin.listeners;
 
 import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.objects.GUI;
-import fr.noalegeek68.noaplugin.objects.ItemsGUI;
-import fr.noalegeek68.noaplugin.utils.InventoryBuilder;
+import fr.noalegeek68.noaplugin.objects.Inventories;
+import fr.noalegeek68.noaplugin.objects.ItemsInventories;
+import fr.noalegeek68.noaplugin.objects.ItemsInventories;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemStackUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -33,6 +33,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player) event.getPlayer();
+        Inventory inventory = event.getInventory();
         if(player.getInventory().getHelmet() != null && player.getInventory().getHelmet().isSimilar(new ItemBuilder(Material.DIAMOND_HELMET)
                 .build())) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 1));
@@ -45,7 +46,7 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
         knightMap.put(player, false);
         player.getInventory().clear();
-        player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
+        player.getInventory().setItem(4, ItemsInventories.KITS.itemStack);
         player.updateInventory();
         if(NoaPlugin.arrayModerators.contains(player.getUniqueId())){
             NoaPlugin.arrayModerators.remove(event.getPlayer().getUniqueId());
@@ -59,19 +60,19 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
         if(itemStack != null) {
-            if (itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
+            if (itemStack.isSimilar(ItemsInventories.KITS.itemStack)) {
                 event.setCancelled(true);
-                GUI.KITS.inventoryBuilder.build().setItem(13, new ItemBuilder(Material.IRON_SWORD)
+                Inventories.KITS.inventory.setItem(13, new ItemBuilder(Material.IRON_SWORD)
                         .setDisplayName(ChatColor.DARK_GREEN + "Kit Chevalier")
                         .build());
                 for(int slot = 0; slot < 27; slot++){
-                    if(GUI.KITS.inventoryBuilder.build().getItem(slot) == null || GUI.KITS.inventoryBuilder.build().getItem(slot).getType().isAir()){
-                        GUI.KITS.inventoryBuilder.build().setItem(slot, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                    if(Inventories.KITS.inventory.getItem(slot) == null || Inventories.KITS.inventory.getItem(slot).getType().isAir()){
+                        Inventories.KITS.inventory.setItem(slot, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                                 .setDisplayName(ChatColor.DARK_GRAY + "Rien")
                                 .build());
                     }
                 }
-                player.openInventory(GUI.KITS.inventoryBuilder.build());
+                player.openInventory(Inventories.KITS.inventory);
             }
         }
     }
@@ -82,14 +83,14 @@ public class Listeners implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (ItemStackUtils.isAirOrNull(itemStack)) return;
         if(inventory == player.getInventory() && player.getGameMode().equals(GameMode.SURVIVAL)) {
-            if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)){
+            if(itemStack.isSimilar(ItemsInventories.KITS.itemStack)){
                 event.setCancelled(true);
                 return;
             }
         }
-        if(inventory == GUI.KITS.inventoryBuilder.build()) {
+        if(inventory == Inventories.KITS.inventory) {
             event.setCancelled(true);
-            if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)) {
+            if(itemStack.isSimilar(ItemsInventories.KITS.itemStack)) {
                 if (!knightMap.get(player)) {
                     player.getInventory().clear();
                     player.getInventory().setItem(EquipmentSlot.HEAD, new ItemStack(Material.IRON_HELMET));
@@ -99,11 +100,11 @@ public class Listeners implements Listener {
                     player.getInventory().setItem(0, new ItemStack(Material.IRON_SWORD));
                     player.getInventory().setItem(1, new ItemStack(Material.BOW));
                     player.getInventory().setItem(2, new ItemStack(Material.ARROW, 64));
-                    player.getInventory().setItem(8, ItemsGUI.KITS.itemStack);
+                    player.getInventory().setItem(8, ItemsInventories.KITS.itemStack);
                     knightMap.put(player, true);
                 } else {
                     player.getInventory().clear();
-                    player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
+                    player.getInventory().setItem(4, ItemsInventories.KITS.itemStack);
                     knightMap.put(player, false);
                 }
                 player.closeInventory();

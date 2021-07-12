@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "5.1.0"
 }
 
 group = 'fr.noalegeek68'
@@ -25,6 +26,7 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     compileOnly 'org.jetbrains:annotations:21.0.1'
+    compile 'fr.minuskube.inv:smart-invs:1.2.7'
 }
 
 processResources {
@@ -42,4 +44,7 @@ task copyFile(type: Copy){
     into file("C:\\Users\\noacr\\OneDrive\\Bureau\\NoaPlugin serveur\\plugins")
 }
 
-build.finalizedBy(copyFile)
+shadowJar{
+    archiveClassifier = ""
+}
+shadowJar.finalizedBy(copyFile)

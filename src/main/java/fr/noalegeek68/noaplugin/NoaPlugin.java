@@ -1,5 +1,7 @@
 package fr.noalegeek68.noaplugin;
 
+import fr.minuskube.inv.InventoryManager;
+import fr.minuskube.inv.SmartInventory;
 import fr.noalegeek68.noaplugin.commands.*;
 import fr.noalegeek68.noaplugin.commands.moderation.ModCommand;
 import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
@@ -20,10 +22,12 @@ public final class NoaPlugin extends JavaPlugin {
     public static final String pluginPrefix = String.format("%s[%sNoaPlugin%s] ", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY);
     public static final ArrayList<UUID> arrayModerators = new ArrayList<>();
     private static NoaPlugin instance;
+    private static InventoryManager manager;
 
     @Override
     public void onLoad() {
         instance = this;
+
     }
 
     @Override
@@ -32,6 +36,8 @@ public final class NoaPlugin extends JavaPlugin {
         registerListeners();
         registerCommands();
         getServer().getPluginManager().registerEvents(new Listeners(), this);
+        manager = new InventoryManager(this);
+        manager.init();
     }
 
     private void registerListeners() {
@@ -63,4 +69,5 @@ public final class NoaPlugin extends JavaPlugin {
 
     public static NoaPlugin getInstance(){ return instance; }
     public static String getPermission(){ return "noaplugin."; }
+    public static InventoryManager getManager(){ return manager; }
 }
