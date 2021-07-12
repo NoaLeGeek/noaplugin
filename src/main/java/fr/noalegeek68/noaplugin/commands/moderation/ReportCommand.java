@@ -1,18 +1,13 @@
 package fr.noalegeek68.noaplugin.commands.moderation;
 
 import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.objects.GUI;
-import fr.noalegeek68.noaplugin.objects.Test;
 import fr.noalegeek68.noaplugin.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ReportCommand implements CommandExecutor {
