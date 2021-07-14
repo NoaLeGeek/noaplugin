@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
@@ -20,8 +21,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Listeners implements Listener {
+import java.util.ArrayList;
 
+public class Listeners implements Listener {
+    public static ArrayList<Player> arrayReportOther = new ArrayList<>();
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player) event.getPlayer();
@@ -36,7 +39,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
-        GUI.knightMap.put(player, false);
+        if(GUI.arrayKnight.contains(player)) GUI.arrayKnight.add(player);
+        if(arrayReportOther.contains(player)) arrayReportOther.add(player);
         player.getInventory().clear();
         player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
         player.updateInventory();
@@ -69,5 +73,9 @@ public class Listeners implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event){
+
     }
 }
