@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +30,13 @@ public enum GUI {
             .provider(new InventoryProvider() {
                 @Override
                 public void init(Player player, InventoryContents contents) {
+                    contents.fill(ClickableItem.empty((new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                            .setDisplayName(ChatColor.DARK_GRAY + "Rien")
+                            .build())));
                     contents.set(1, 4, ClickableItem.of(ItemsGUI.KNIGHTKIT.itemStack,
                             e -> {
                                 e.setCancelled(true);
-                                if (!knightMap.get(player)) {
+                                if (!arrayKnight.contains(player)) {
                                     player.getInventory().clear();
                                     player.getInventory().setItem(EquipmentSlot.HEAD, new ItemStack(Material.IRON_HELMET));
                                     player.getInventory().setItem(EquipmentSlot.CHEST, new ItemStack(Material.IRON_CHESTPLATE));
@@ -42,23 +46,14 @@ public enum GUI {
                                     player.getInventory().setItem(1, new ItemStack(Material.BOW));
                                     player.getInventory().setItem(2, new ItemStack(Material.ARROW, 64));
                                     player.getInventory().setItem(8, ItemsGUI.KITS.itemStack);
-                                    knightMap.put(player, true);
+                                    arrayKnight.add(player);
                                 } else {
                                     player.getInventory().clear();
                                     player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
-                                    knightMap.put(player, false);
+                                    arrayKnight.remove(player);
                                 }
                                 player.closeInventory();
                             }));
-                    for(int row = 0; row < contents.inventory().getRows() + 1 ; row++){
-                        for(int columns = 0; columns < contents.inventory().getColumns() + 1; columns++) {
-                            if (!contents.get(row, columns).isPresent()) {
-                                contents.set(row, columns, ClickableItem.empty((new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
-                                        .setDisplayName(ChatColor.DARK_GRAY + "Rien")
-                                        .build())));
-                            }
-                        }
-                    }
                 }
 
                 @Override
@@ -69,7 +64,7 @@ public enum GUI {
             .build());
 
     public final SmartInventory smartInventory;
-    public static final Map<Player, Boolean> knightMap = new HashMap<>();
+    public static final ArrayList<Player> arrayKnight = new ArrayList<>();
 
     GUI(SmartInventory smartInventory) {
         this.smartInventory = smartInventory;
