@@ -6,17 +6,10 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class ItemStackUtils {
-
-    /*private static final Material[] armors = new Material[]{Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS,
-            Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS,
-            Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS,
-            Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS,
-            Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS};*/
 
     public static boolean isAnArmor(ItemStack is) {
         return is.getType().name().endsWith("_HELMET") || is.getType().name().endsWith("_CHESTPLATE") || is.getType().name().endsWith("_LEGGINGS") ||
@@ -50,9 +43,10 @@ public class ItemStackUtils {
     public static Material randomSkull(){
         final List<Material> skulls = new ArrayList<>();
         for(Material skull : Material.values()){
-            if(skull.name().endsWith("_HEAD") && !skull.name().endsWith("_WALL_HEAD") && !skull.name().endsWith("_WALL_SKULL") && !skull.name().startsWith("LEGACY") ||
-                    skull.name().endsWith("_SKULL") && skull != Material.PISTON_HEAD){
-                skulls.add(skull);
+            if(!skull.name().endsWith("_WALL_HEAD") && !skull.name().endsWith("_WALL_SKULL") && !skull.name().startsWith("LEGACY") && !skull.name().startsWith("PISTON")){
+                if(skull.name().endsWith("_SKULL") || skull.name().endsWith("_HEAD")){
+                    skulls.add(skull);
+                }
             }
         }
         return skulls.get(new Random().nextInt(skulls.size()));
