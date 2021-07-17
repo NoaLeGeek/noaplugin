@@ -1,6 +1,7 @@
 package fr.noalegeek68.noaplugin.listeners;
 
 import fr.noalegeek68.noaplugin.NoaPlugin;
+import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
 import fr.noalegeek68.noaplugin.objects.GUI;
 import fr.noalegeek68.noaplugin.objects.ItemsGUI;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
@@ -21,10 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Listeners implements Listener {
-    public static ArrayList<Player> arrayReportOther = new ArrayList<>();
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player) event.getPlayer();
@@ -40,7 +41,6 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         if(GUI.arrayKnight.contains(player)) GUI.arrayKnight.add(player);
-        if(arrayReportOther.contains(player)) arrayReportOther.add(player);
         player.getInventory().clear();
         player.getInventory().setItem(4, ItemsGUI.KITS.itemStack);
         player.updateInventory();
@@ -73,9 +73,5 @@ public class Listeners implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent event){
-
     }
 }

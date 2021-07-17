@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,14 +41,14 @@ public class ReportCommand implements CommandExecutor {
             CommandUtils.permissionError(player);
             return false;
         }
-        if(args.length != 1){
+        if (args.length != 1) {
             player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Il manque des arguments : " + ChatColor.RESET + "\n" +
                     "/" + command.getName() + " <pseudo>" + ChatColor.DARK_GRAY + "\n" +
                     "<pseudo>" + ChatColor.GRAY + " correspondra au joueur.");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
-        if(target == null){
+        if (target == null) {
             player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " n'est pas connecté ou n'existe pas.");
             return false;
         }
@@ -57,7 +58,8 @@ public class ReportCommand implements CommandExecutor {
                 .title("Sélectionnez une raison")
                 .type(InventoryType.CHEST)
                 .provider(new InventoryProvider() {
-                    private int sharpnessLevel = 1;
+                    private String reason;
+
                     @Override
                     public void init(Player player, InventoryContents contents) {
                         contents.fill(ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
@@ -69,67 +71,32 @@ public class ReportCommand implements CommandExecutor {
                                         .addLoreLine(ChatColor.GRAY + "ou incite à rejoindre une arnaque.")
                                         .build(),
                                 e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
-                                }));                        contents.set(1, 3, ClickableItem.of(new ItemBuilder(Material.NETHERITE_AXE)
+                                }));
+                        contents.set(1, 3, ClickableItem.of(new ItemBuilder(Material.NETHERITE_AXE)
                                         .setDisplayName(ChatColor.DARK_GRAY + "Cheat")
-                                        .addEnchant(Enchantment.DAMAGE_ALL, sharpnessLevel)
                                         .addLoreLine(ChatColor.GRAY + "Le joueur a utilisé n'importe quel type de cheat.")
                                         .build(),
                                 e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
                                     e.setCancelled(true);
-                                }));                        contents.set(1, 4, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
+                                }));
+                        contents.set(1, 4, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
                                         .setDisplayName(ChatColor.DARK_GRAY + "Mauvais pseudo")
                                         .addLoreLine(ChatColor.GRAY + "Le joueur possède un mauvais pseudo.")
                                         .build(),
                                 e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
                                     e.setCancelled(true);
-                                }));                        contents.set(1, 5, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomBanner())
-                                        .setDisplayName(ChatColor.DARK_GRAY + "Mauvais skin/cape")
-                                        .addLoreLine(ChatColor.GRAY + "Le joueur possède un mauvais skin ou une mauvaise cape.")
-                                        .build(),
-                                e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
-                                    e.setCancelled(true);
-                                }));                        contents.set(1, 6, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomSkull())
-                                        .setDisplayName(ChatColor.DARK_GRAY + "Equipe non-autorisée")
-                                        .addLoreLine(ChatColor.GRAY + "Le joueur fait équipe avec une personne alors qu'il ne devrait pas.")
-                                        .build(),
-                                e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
-                                    e.setCancelled(true);
-                                }));                        contents.set(2, 3, ClickableItem.of(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
-                                        .setDisplayName(ChatColor.DARK_GRAY + "Autre raison")
-                                        .addLoreLine(ChatColor.GRAY + "Le joueur a fait quelque chose de non-listé dans ces raisons.")
-                                        .build(),
-                                e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
-                                    e.setCancelled(true);
-                                    Listeners.arrayReportOther.add((Player) e.getWhoClicked());
                                 }));
-                    }
-                    @Override
-                    public void update(Player player, InventoryContents contents) {
-                        int state = contents.property("state", 0);
-                        contents.setProperty("state", state + 1);
-                        if(state % 20 != 0) return;
-                        contents.set(1, 3, ClickableItem.of(new ItemBuilder(Material.NETHERITE_AXE)
-                                        .setDisplayName(ChatColor.DARK_GRAY + "Cheat")
-                                        .addEnchant(Enchantment.DAMAGE_ALL, sharpnessLevel)
-                                        .setLore(ChatColor.GRAY + "Le joueur a fait un abus de langage dans le tchat ou incite à rejoindre une arnaque.")
-                                        .build(),
-                                e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
-                                    e.setCancelled(true);
-                                    }));
                         contents.set(1, 5, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomBanner())
                                         .setDisplayName(ChatColor.DARK_GRAY + "Mauvais skin/cape")
                                         .addLoreLine(ChatColor.GRAY + "Le joueur possède un mauvais skin ou une mauvaise cape.")
                                         .build(),
                                 e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
                                     e.setCancelled(true);
                                 }));
                         contents.set(1, 6, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomSkull())
@@ -137,17 +104,92 @@ public class ReportCommand implements CommandExecutor {
                                         .addLoreLine(ChatColor.GRAY + "Le joueur fait équipe avec une personne alors qu'il ne devrait pas.")
                                         .build(),
                                 e -> {
-                                    sendReport(player, target, e.getCurrentItem().getItemMeta().getDisplayName().substring(2), command);
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
                                     e.setCancelled(true);
                                 }));
-                        if(sharpnessLevel == 10) sharpnessLevel = 0;
-                        sharpnessLevel++;
+                        contents.set(2, 4, ClickableItem.of(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
+                                        .setDisplayName(ChatColor.DARK_GRAY + "Autre raison")
+                                        .addLoreLine(ChatColor.GRAY + "Le joueur a fait quelque chose de non-listé dans ces raisons.")
+                                        .build(),
+                                e -> {
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    e.setCancelled(true);
+                                }));
+                        contents.set(4, 2, ClickableItem.of(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+                                .setDisplayName(ChatColor.DARK_GREEN + "Valider la raison")
+                                .addLoreLine(ChatColor.GREEN + "En appuyant sur cet item,")
+                                .addLoreLine(ChatColor.GREEN + "vous allez valider la raison et envoyer le report.")
+                                .build(),
+                                e -> {
+                                    e.setCancelled(true);
+                                    e.getWhoClicked().closeInventory();
+                                    sendReport(player, target, reason, command);
+                        }));
+                        contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.PLAYER_HEAD)
+                                .setHead(target)
+                                .setDisplayName(ChatColor.GOLD + "Qui est report ?")
+                                .addLoreLine(ChatColor.YELLOW + "Raison : Aucune")
+                                .build()));
+                        contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                                .setDisplayName(ChatColor.DARK_RED + "Annuler le report")
+                                .addLoreLine(ChatColor.RED + "En appuyant sur cet item,")
+                                .addLoreLine(ChatColor.RED + "vous allez annuler le report et fermer ce GUI.")
+                                .build()));
+                    }
+
+                    @Override
+                    public void update(Player player, InventoryContents contents) {
+                        int state = contents.property("state", 0);
+                        contents.setProperty("state", state + 1);
+                        if(reason == null){
+                            contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.PLAYER_HEAD)
+                                    .setHead(target)
+                                    .setDisplayName(ChatColor.GOLD + "Qui est report ?")
+                                    .addLoreLine(ChatColor.YELLOW + "Raison : Aucune")
+                                    .build()));
+                        } else {
+                            contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.PLAYER_HEAD)
+                                    .setHead(target)
+                                    .setDisplayName(ChatColor.GOLD + "Qui est report ?")
+                                    .addLoreLine(ChatColor.YELLOW + "Raison : " + reason)
+                                    .build()));
+                        }
+                        if (state % 20 != 0) return;
+                        contents.set(1, 5, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomBanner())
+                                        .setDisplayName(ChatColor.DARK_GRAY + "Mauvais skin/cape")
+                                        .addLoreLine(ChatColor.GRAY + "Le joueur possède un mauvais skin ou une mauvaise cape.")
+                                        .build(),
+                                e -> {
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    e.setCancelled(true);
+                                }));
+                        contents.set(1, 6, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomSkull())
+                                        .setDisplayName(ChatColor.DARK_GRAY + "Equipe non-autorisée")
+                                        .addLoreLine(ChatColor.GRAY + "Le joueur fait équipe avec une personne alors qu'il ne devrait pas.")
+                                        .build(),
+                                e -> {
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    e.setCancelled(true);
+                                }));
                     }
                 }).manager(NoaPlugin.getManager()).build();
         reportInventory.open(player);
         return true;
     }
-    private static void sendReport(Player whoReported, Player beenReported, String reason, Command command){
+
+    public static void sendReport(Player whoReported, Player beenReported, String reason, Command command) {
         Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(NoaPlugin.getPermission() + command.getName() + ".see")).forEach(player -> player.sendMessage(String.format("%s[%sReport%s] %s%s%s a reporté %s%s%s pour la raison \"%s%s%s\".", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY, ChatColor.DARK_AQUA, whoReported.getDisplayName(), ChatColor.AQUA, ChatColor.DARK_AQUA, beenReported.getDisplayName(), ChatColor.AQUA, ChatColor.RED, reason, ChatColor.AQUA)));
+    }
+
+    public static void setGlowUnglowOthers(SmartInventory inventory, InventoryContents contents, ItemStack itemGlow){
+        for(int rows = 0; rows <= inventory.getRows(); rows++){
+            for(int columns = 0; columns <= inventory.getColumns(); columns++){
+                if(!contents.get(rows, columns).equals(itemGlow)){
+                    System.out.println("pas égal");
+                } else {
+                    System.out.println("égal");
+                }
+            }
+        }
     }
 }

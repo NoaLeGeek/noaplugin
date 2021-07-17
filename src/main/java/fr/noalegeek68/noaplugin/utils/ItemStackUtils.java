@@ -50,10 +50,8 @@ public class ItemStackUtils {
     public static Material randomSkull(){
         final List<Material> skulls = new ArrayList<>();
         for(Material skull : Material.values()){
-            if(skull.name().endsWith("_HEAD") && !skull.name().endsWith("_WALL_HEAD")){
-                skulls.add(skull);
-            }
-            if(skull.name().endsWith("_SKULL") && !skull.name().endsWith("_WALL_SKULL")){
+            if(skull.name().endsWith("_HEAD") && !skull.name().endsWith("_WALL_HEAD") && !skull.name().endsWith("_WALL_SKULL") && !skull.name().startsWith("LEGACY") ||
+                    skull.name().endsWith("_SKULL") && skull != Material.PISTON_HEAD){
                 skulls.add(skull);
             }
         }
