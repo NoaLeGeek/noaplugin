@@ -1,6 +1,8 @@
 package fr.noalegeek68.noaplugin.utils;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,5 +43,27 @@ public class ItemStackUtils {
         List<Material> skulls = Arrays.stream(Material.values()).filter(material -> (!material.name().startsWith("PISTON") && material.name().endsWith("_HEAD") && !material.name().endsWith("_WALL_HEAD")) ||
                 (material.name().endsWith("_SKULL") && !material.name().startsWith("LEGACY") && !material.name().endsWith("_WALL_SKULL"))).collect(Collectors.toList());
         return skulls.get(new Random().nextInt(skulls.size()));
+    }
+
+    public static void setGlow(boolean glow, ItemStack itemStack) {
+        if(glow) {
+            if(ItemStackUtils.isAnArmor(itemStack)) {
+                itemStack.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+            } else {
+                itemStack.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 1);
+            }
+            ItemMeta meta = itemStack.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemStack.setItemMeta(meta);
+        } else {
+            ItemMeta meta = itemStack.getItemMeta();
+            for(Enchantment enchantment : meta.getEnchants().keySet()) {
+                meta.removeEnchant(enchantment);
+            }
+        }
+    }
+
+    public static void setGlow(ItemStack itemStack) {
+        setGlow(itemStack.getEnchantments().isEmpty(), itemStack);
     }
 }

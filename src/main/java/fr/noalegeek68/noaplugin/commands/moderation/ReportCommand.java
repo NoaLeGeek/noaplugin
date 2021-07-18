@@ -1,12 +1,10 @@
 package fr.noalegeek68.noaplugin.commands.moderation;
 
-import com.google.gson.JsonArray;
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.listeners.Listeners;
 import fr.noalegeek68.noaplugin.utils.CommandUtils;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemStackUtils;
@@ -16,18 +14,10 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class ReportCommand implements CommandExecutor {
     @Override
@@ -81,6 +71,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(1, 4, ClickableItem.of(new ItemBuilder(Material.NAME_TAG)
@@ -89,6 +80,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(1, 5, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomBanner())
@@ -97,6 +89,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(1, 6, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomSkull())
@@ -105,6 +98,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(2, 4, ClickableItem.of(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
@@ -113,6 +107,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(4, 2, ClickableItem.of(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
@@ -121,6 +116,7 @@ public class ReportCommand implements CommandExecutor {
                                 .addLoreLine(ChatColor.GREEN + "vous allez valider la raison et envoyer le report.")
                                 .build(),
                                 e -> {
+                                    reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
                                     e.setCancelled(true);
                                     e.getWhoClicked().closeInventory();
                                     sendReport(player, target, reason, command);
@@ -130,11 +126,15 @@ public class ReportCommand implements CommandExecutor {
                                 .setDisplayName(ChatColor.GOLD + "Qui est report ?")
                                 .addLoreLine(ChatColor.YELLOW + "Raison : Aucune")
                                 .build()));
-                        contents.set(4, 4, ClickableItem.empty(new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                        contents.set(4, 6, ClickableItem.of(new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
                                 .setDisplayName(ChatColor.DARK_RED + "Annuler le report")
                                 .addLoreLine(ChatColor.RED + "En appuyant sur cet item,")
                                 .addLoreLine(ChatColor.RED + "vous allez annuler le report et fermer ce GUI.")
-                                .build()));
+                                .build(),
+                                e -> {
+                            e.setCancelled(true);
+                            e.getWhoClicked().closeInventory();
+                                }));
                     }
 
                     @Override
@@ -161,6 +161,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                         contents.set(1, 6, ClickableItem.of(new ItemBuilder(ItemStackUtils.randomSkull())
@@ -169,6 +170,7 @@ public class ReportCommand implements CommandExecutor {
                                         .build(),
                                 e -> {
                                     reason = e.getCurrentItem().getItemMeta().getDisplayName().substring(2);
+                                    setGlowUnglowOthers(contents.inventory(), contents, e.getCurrentItem());
                                     e.setCancelled(true);
                                 }));
                     }
@@ -184,10 +186,10 @@ public class ReportCommand implements CommandExecutor {
     public static void setGlowUnglowOthers(SmartInventory inventory, InventoryContents contents, ItemStack itemGlow){
         for(int rows = 0; rows <= inventory.getRows(); rows++){
             for(int columns = 0; columns <= inventory.getColumns(); columns++){
-                if(!contents.get(rows, columns).equals(itemGlow)){
-                    System.out.println("pas égal");
-                } else {
-                    System.out.println("égal");
+                if(contents.get(rows, columns).isPresent()) {
+                    ItemStack item = contents.get(rows, columns).get().getItem();
+                    ItemStackUtils.setGlow(item.isSimilar(itemGlow), item);
+                    contents.set(rows, columns, ClickableItem.of(item, e -> e.setCancelled(true)));
                 }
             }
         }
