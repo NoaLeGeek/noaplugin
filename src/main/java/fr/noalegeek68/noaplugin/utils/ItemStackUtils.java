@@ -40,23 +40,22 @@ public class ItemStackUtils {
     }
 
     public static Material randomSkull(){
-        List<Material> skulls = Arrays.stream(Material.values()).filter(material -> material.name().endsWith("_HEAD") || material.name().endsWith("_SKULL") &&
-                material.isItem()).collect(Collectors.toList());
+        List<Material> skulls = Arrays.stream(Material.values()).filter(material -> (!material.name().startsWith("PISTON") && material.name().endsWith("_HEAD") && !material.name().endsWith("_WALL_HEAD")) ||
+                (material.name().endsWith("_SKULL") && !material.name().startsWith("LEGACY") && !material.name().endsWith("_WALL_SKULL"))).collect(Collectors.toList());
         return skulls.get(new Random().nextInt(skulls.size()));
     }
 
     public static void setGlow(boolean glow, ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
         if(glow) {
             if(ItemStackUtils.isAnArmor(itemStack)) {
-                itemStack.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+                meta.addEnchant(Enchantment.LURE, 1, true);
             } else {
-                itemStack.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, 1);
+                meta.addEnchant(Enchantment.PROTECTION_EXPLOSIONS, 1, true);
             }
-            ItemMeta meta = itemStack.getItemMeta();
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemStack.setItemMeta(meta);
         } else {
-            ItemMeta meta = itemStack.getItemMeta();
             for(Enchantment enchantment : meta.getEnchants().keySet()) {
                 meta.removeEnchant(enchantment);
             }
