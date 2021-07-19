@@ -34,14 +34,14 @@ public class ItemStackUtils {
     }
 
     public static Material randomBanner(){
-        List<Material> banners = Arrays.stream(Material.values()).filter(banner -> banner.name().endsWith("_BANNER") && !banner.name().endsWith("_WALL_BANNER") && !banner.name().startsWith("LEGACY"))
+        List<Material> banners = Arrays.stream(Material.values()).filter(banner -> banner.name().endsWith("_BANNER") && banner.isItem() && !banner.name().startsWith("LEGACY"))
                 .collect(Collectors.toList());
         return banners.get(new Random().nextInt(banners.size()));
     }
 
     public static Material randomSkull(){
-        List<Material> skulls = Arrays.stream(Material.values()).filter(material -> (!material.name().startsWith("PISTON") && material.name().endsWith("_HEAD") && !material.name().endsWith("_WALL_HEAD")) ||
-                (material.name().endsWith("_SKULL") && !material.name().startsWith("LEGACY") && !material.name().endsWith("_WALL_SKULL"))).collect(Collectors.toList());
+        List<Material> skulls = Arrays.stream(Material.values()).filter(material -> material.name().endsWith("_HEAD") || material.name().endsWith("_SKULL") &&
+                material.isItem()).collect(Collectors.toList());
         return skulls.get(new Random().nextInt(skulls.size()));
     }
 
