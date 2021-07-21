@@ -12,6 +12,7 @@ sourceCompatibility = targetCompatibility = 1.8
 compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         name = 'spigotmc-repo'
@@ -24,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.17-R0.1-SNAPSHOT'
     compileOnly 'org.jetbrains:annotations:21.0.1'
     compile 'fr.minuskube.inv:smart-invs:1.2.7'
 }
