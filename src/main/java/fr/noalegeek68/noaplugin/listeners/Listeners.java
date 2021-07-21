@@ -93,7 +93,7 @@ public class Listeners implements Listener {
                     .id("fishinggame")
                     .provider(new InventoryProvider() {
                         int posFishingRod = 4;
-                        int oldPosFishingRod;
+                        int columnItemCaught = 4;
                         @Override
                         public void init(Player player, InventoryContents contents) {
                             contents.fill(ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
@@ -131,7 +131,7 @@ public class Listeners implements Listener {
                             int state = contents.property("state", 0);
                             contents.setProperty("state", state + 1);
                             if(posFishingRod >= 8){
-                                posFishingRod = 6;
+                                posFishingRod = 7;
                             } else if(posFishingRod <= 0){
                                 posFishingRod = 1;
                             } else {
@@ -141,19 +141,16 @@ public class Listeners implements Listener {
                                 contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
                             }
                             if(state % 60 == 0){
-                                int posItemCaught = Utils.randomMinMax(1, 6);
-                                while(oldPosFishingRod == posItemCaught){
-                                    posItemCaught = Utils.randomMinMax(1, 6);
-                                    if(posItemCaught != oldPosFishingRod){
-                                        oldPosFishingRod = posFishingRod;
-                                        break;
+                                for(int column = 1; column < 8; column++){ // Getting the column of the itemCaught.
+                                    if(contents.get(4, column).get().getItem().isSimilar(itemCaught.getItemStack())){
+                                        columnItemCaught = column;
                                     }
                                 }
                                 contents.fillRect(4, 1, 4, 7, ClickableItem.empty(new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
                                         .setDisplayName(ChatColor.DARK_AQUA + "Slot de déplacement")
                                         .addLoreLine(ChatColor.AQUA + "L'objet peut se déplacer ici.")
                                         .build()));
-                                contents.set(4, posItemCaught, ClickableItem.empty(itemCaught.getItemStack()));
+                                contents.set(4, Utils.randomMinMax(columnItemCaught == 1 ? 1 : columnItemCaught - 1, columnItemCaught == 7 ? 7 : columnItemCaught + 1), ClickableItem.empty(itemCaught.getItemStack()));
                             }
                         }
                     })
