@@ -92,8 +92,8 @@ public class Listeners implements Listener {
                     .title("Fishing Game")
                     .id("fishinggame")
                     .provider(new InventoryProvider() {
-                        int positionFishingRod = 4;
-
+                        int posFishingRod = 4;
+                        int oldPosFishingRod;
                         @Override
                         public void init(Player player, InventoryContents contents) {
                             contents.fill(ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
@@ -111,7 +111,7 @@ public class Listeners implements Listener {
                                             .build(),
                                     e -> {
                                         e.setCancelled(true);
-                                        positionFishingRod--;
+                                        posFishingRod--;
                                     }));
                             contents.set(1, 5, ClickableItem.of(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
                                             .setDisplayName(ChatColor.DARK_BLUE + "Droite")
@@ -121,31 +121,39 @@ public class Listeners implements Listener {
                                             .build(),
                                     e -> {
                                         e.setCancelled(true);
-                                        positionFishingRod++;
+                                        posFishingRod++;
                                     }));
-                            contents.set(3, positionFishingRod, ClickableItem.empty(fishingRod));
+                            contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
                             contents.set(4, 3, ClickableItem.empty(itemCaught.getItemStack()));
                         }
                         @Override
                         public void update(Player player, InventoryContents contents) {
                             int state = contents.property("state", 0);
                             contents.setProperty("state", state + 1);
-                            if(positionFishingRod >= 8){
-                                positionFishingRod = 6;
-                            } else if(positionFishingRod <= 0){
-                                positionFishingRod = 1;
+                            if(posFishingRod >= 8){
+                                posFishingRod = 6;
+                            } else if(posFishingRod <= 0){
+                                posFishingRod = 1;
                             } else {
                                 contents.fillRect(3, 1, 3, 7, ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                                         .setDisplayName(ChatColor.DARK_GRAY + "Rien")
                                         .build()));
-                                contents.set(3, positionFishingRod, ClickableItem.empty(fishingRod));
+                                contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
                             }
                             if(state % 60 == 0){
+                                int posItemCaught = Utils.randomMinMax(1, 6);
+                                while(oldPosFishingRod == posItemCaught){
+                                    posItemCaught = Utils.randomMinMax(1, 6);
+                                    if(posItemCaught != oldPosFishingRod){
+                                        oldPosFishingRod = posFishingRod;
+                                        break;
+                                    }
+                                }
                                 contents.fillRect(4, 1, 4, 7, ClickableItem.empty(new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
                                         .setDisplayName(ChatColor.DARK_AQUA + "Slot de déplacement")
                                         .addLoreLine(ChatColor.AQUA + "L'objet peut se déplacer ici.")
                                         .build()));
-                                contents.set(4, Utils.randomMinMax(1, 6), ClickableItem.empty(itemCaught.getItemStack()));
+                                contents.set(4, posItemCaught, ClickableItem.empty(itemCaught.getItemStack()));
                             }
                         }
                     })
