@@ -1,29 +1,33 @@
 package fr.noalegeek68.noaplugin.listeners;
 
+import fr.minuskube.inv.ClickableItem;
+import fr.minuskube.inv.SmartInventory;
+import fr.minuskube.inv.content.InventoryContents;
+import fr.minuskube.inv.content.InventoryProvider;
 import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
 import fr.noalegeek68.noaplugin.objects.GUI;
 import fr.noalegeek68.noaplugin.objects.ItemsGUI;
 import fr.noalegeek68.noaplugin.utils.ItemBuilder;
 import fr.noalegeek68.noaplugin.utils.ItemStackUtils;
+import fr.noalegeek68.noaplugin.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Listeners implements Listener {
     @EventHandler
@@ -72,6 +76,81 @@ public class Listeners implements Listener {
             if(itemStack.isSimilar(ItemsGUI.KITS.itemStack)){
                 event.setCancelled(true);
             }
+        }
+    }
+    @EventHandler
+    public void onFish(PlayerFishEvent event){
+        Player player = event.getPlayer();
+        if(event.getState() == PlayerFishEvent.State.CAUGHT_FISH){
+            event.setCancelled(true);
+            ItemStack fishingRod = player.getItemInHand();
+            Item itemCaught = (Item) event.getCaught();
+            SmartInventory fishingGUI = SmartInventory.builder()
+                    .manager(NoaPlugin.getManager())
+                    .size(6, 9)
+                    .type(InventoryType.CHEST)
+                    .title("Fishing Game")
+                    .id("fishinggame")
+                    .provider(new InventoryProvider() {
+                        int positionFishingRod = 4;
+
+                        @Override
+                        public void init(Player player, InventoryContents contents) {
+                            contents.fill(ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                                    .setDisplayName(ChatColor.DARK_GRAY + "Rien")
+                                    .build()));
+                            contents.fillRect(4, 1, 4, 7, ClickableItem.empty(new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                                    .setDisplayName(ChatColor.DARK_AQUA + "Slot de déplacement")
+                                    .addLoreLine(ChatColor.AQUA + "L'objet peut se déplacer ici.")
+                                    .build()));
+                            contents.set(1, 3, ClickableItem.of(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
+                                            .setDisplayName(ChatColor.DARK_BLUE + "Gauche")
+                                            .addLoreLine(ChatColor.BLUE + "En appuyant sur cet item,")
+                                            .addLoreLine(ChatColor.BLUE + "la canne à pêche va bouger à gauche.")
+                                            .setCustomModelData(1)
+                                            .build(),
+                                    e -> {
+                                        e.setCancelled(true);
+                                        positionFishingRod--;
+                                    }));
+                            contents.set(1, 5, ClickableItem.of(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
+                                            .setDisplayName(ChatColor.DARK_BLUE + "Droite")
+                                            .addLoreLine(ChatColor.BLUE + "En appuyant sur cet item,")
+                                            .addLoreLine(ChatColor.BLUE + "la canne à pêche va bouger à droite.")
+                                            .setCustomModelData(2)
+                                            .build(),
+                                    e -> {
+                                        e.setCancelled(true);
+                                        positionFishingRod++;
+                                    }));
+                            contents.set(3, positionFishingRod, ClickableItem.empty(fishingRod));
+                            contents.set(4, 3, ClickableItem.empty(itemCaught.getItemStack()));
+                        }
+                        @Override
+                        public void update(Player player, InventoryContents contents) {
+                            int state = contents.property("state", 0);
+                            contents.setProperty("state", state + 1);
+                            if(positionFishingRod >= 8){
+                                positionFishingRod = 6;
+                            } else if(positionFishingRod <= 0){
+                                positionFishingRod = 1;
+                            } else {
+                                contents.fillRect(3, 1, 3, 7, ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                                        .setDisplayName(ChatColor.DARK_GRAY + "Rien")
+                                        .build()));
+                                contents.set(3, positionFishingRod, ClickableItem.empty(fishingRod));
+                            }
+                            if(state % 60 == 0){
+                                contents.fillRect(4, 1, 4, 7, ClickableItem.empty(new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                                        .setDisplayName(ChatColor.DARK_AQUA + "Slot de déplacement")
+                                        .addLoreLine(ChatColor.AQUA + "L'objet peut se déplacer ici.")
+                                        .build()));
+                                contents.set(4, Utils.randomMinMax(1, 6), ClickableItem.empty(itemCaught.getItemStack()));
+                            }
+                        }
+                    })
+                    .build();
+            fishingGUI.open(player);
         }
     }
 }
