@@ -14,7 +14,7 @@ public enum ItemsGUI {
 
     // Items in GUI
     KNIGHTKIT(new ItemBuilder(Material.IRON_SWORD)
-            .setDisplayName(net.md_5.bungee.api.ChatColor.DARK_GREEN + "Kit Chevalier")
+            .setDisplayName(ChatColor.DARK_GREEN + "Kit Chevalier")
             .build());
 
     public final ItemStack itemStack;
