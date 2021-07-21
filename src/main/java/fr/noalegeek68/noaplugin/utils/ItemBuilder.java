@@ -1,11 +1,13 @@
 package fr.noalegeek68.noaplugin.utils;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,10 @@ public class ItemBuilder {
 
     public ItemBuilder(Material mat, int amount) {
         stack = new ItemStack(mat, amount);
+    }
+
+    public ItemBuilder(ItemStack itemstack) {
+        stack = itemstack;
     }
 
     public ItemMeta getItemMeta() {
@@ -207,6 +213,13 @@ public class ItemBuilder {
     public ItemBuilder setBookTitle(String title) {
         BookMeta bm = (BookMeta) stack.getItemMeta();
         bm.setTitle(title);
+        return this;
+    }
+
+    public ItemBuilder setCustomModelData(int customModelData) {
+        ItemMeta meta = getItemMeta();
+        meta.setCustomModelData(customModelData);
+        setItemMeta(meta);
         return this;
     }
 
