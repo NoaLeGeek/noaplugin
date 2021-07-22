@@ -82,7 +82,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onFish(PlayerFishEvent event){
         Player player = event.getPlayer();
-        if(event.getState() == PlayerFishEvent.State.CAUGHT_FISH){
+        if(event.getState() == PlayerFishEvent.State.IN_GROUND){
             event.setCancelled(true);
             SmartInventory fishingGUI = SmartInventory.builder()
                     .manager(NoaPlugin.getManager())
@@ -93,8 +93,9 @@ public class Listeners implements Listener {
                     .provider(new InventoryProvider() {
                         final ItemStack fishingRod = player.getItemInHand();
                         final FishingRewards itemCaught = FishingRewards.values()[new Random().nextInt(FishingRewards.values().length)];
-                        int posFishingRod = 4;
+                        int columnFishingRod = 4;
                         int columnItemCaught = 4;
+                        int score = itemCaught.scoreToHave / 2;
                         @Override
                         public void init(Player player, InventoryContents contents) {
                             contents.fill(ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
@@ -112,8 +113,15 @@ public class Listeners implements Listener {
                                             .build(),
                                     e -> {
                                         e.setCancelled(true);
-                                        posFishingRod--;
+                                        columnFishingRod--;
                                     }));
+                            contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
+                                    .setDisplayName(ChatColor.GOLD + "Informations")
+                                    .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                    .addLoreLine(ChatColor.YELLOW + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                    .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                    .addLoreLine(ChatColor.YELLOW + String.valueOf(itemCaught.chanceToFish) + "%")
+                                    .build()));
                             contents.set(1, 5, ClickableItem.of(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
                                             .setDisplayName(ChatColor.DARK_BLUE + "Droite")
                                             .addLoreLine(ChatColor.BLUE + "En appuyant sur cet item,")
@@ -122,28 +130,93 @@ public class Listeners implements Listener {
                                             .build(),
                                     e -> {
                                         e.setCancelled(true);
-                                        posFishingRod++;
+                                        columnFishingRod++;
                                     }));
-                            contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
-                            contents.set(4, 3, ClickableItem.empty(itemCaught.getItemStack()));
+                            contents.set(3, columnFishingRod, ClickableItem.empty(fishingRod));
+                            contents.set(4, 3, ClickableItem.empty(itemCaught.itemStack));
                         }
                         @Override
                         public void update(Player player, InventoryContents contents) {
                             int state = contents.property("state", 0);
                             contents.setProperty("state", state + 1);
-                            if(posFishingRod >= 8){
-                                posFishingRod = 7;
-                            } else if(posFishingRod <= 0){
-                                posFishingRod = 1;
+                            int percentage = score * 100 / itemCaught.scoreToHave;
+                            if(percentage <= 0) {
+                                player.closeInventory();
+                                player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Vous n'avez pas réussi à attraper l'objet !");
+                            }
+                            if (percentage > 0) {
+                                if (percentage >= 21) {
+                                    if (percentage >= 41) {
+                                        if (percentage >= 61) {
+                                            if (percentage >= 81) {
+                                                if (percentage >= 100) {
+                                                    player.closeInventory();
+                                                    player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.GREEN + "Vous avez réussi à attraper l'objet !");
+                                                    if(player.getInventory().firstEmpty() == -1){
+                                                        player.getWorld().dropItem(player.getLocation(), itemCaught.itemStack);
+                                                    } else {
+                                                        player.getInventory().addItem(itemCaught.itemStack);
+                                                    }
+                                                }
+                                                contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE)
+                                                        .setDisplayName(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "Informations")
+                                                        .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                                        .addLoreLine(ChatColor.DARK_GREEN + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                                        .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                                        .addLoreLine(ChatColor.DARK_GREEN + String.valueOf(itemCaught.chanceToFish) + "%")
+                                                        .build()));
+                                            }
+                                            contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+                                                    .setDisplayName(ChatColor.DARK_GREEN + "Informations")
+                                                    .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                                    .addLoreLine(ChatColor.GREEN + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                                    .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                                    .addLoreLine(ChatColor.GREEN + String.valueOf(itemCaught.chanceToFish) + "%")
+                                                    .build()));
+                                        }
+                                        contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
+                                                .setDisplayName(ChatColor.GOLD + "Informations")
+                                                .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                                .addLoreLine(ChatColor.YELLOW + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                                .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                                .addLoreLine(ChatColor.YELLOW + String.valueOf(itemCaught.chanceToFish) + "%")
+                                                .build()));
+                                    }
+                                    contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.ORANGE_STAINED_GLASS_PANE)
+                                            .setDisplayName(ChatColor.RED + "Informations")
+                                            .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                            .addLoreLine(ChatColor.GOLD + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                            .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                            .addLoreLine(ChatColor.GOLD + String.valueOf(itemCaught.chanceToFish) + "%")
+                                            .build()));
+                                }
+                                contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                                        .setDisplayName(ChatColor.DARK_RED + "Informations")
+                                        .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
+                                        .addLoreLine(ChatColor.RED + String.valueOf((score * 100 / itemCaught.scoreToHave)))
+                                        .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
+                                        .addLoreLine(ChatColor.RED + String.valueOf(itemCaught.chanceToFish) + "%")
+                                        .build()));
+                            }
+                            if(columnFishingRod >= 8){
+                                columnFishingRod = 7;
+                            } else if(columnFishingRod <= 0){
+                                columnFishingRod = 1;
                             } else {
                                 contents.fillRect(3, 1, 3, 7, ClickableItem.empty(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                                         .setDisplayName(ChatColor.DARK_GRAY + "Rien")
                                         .build()));
-                                contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
+                                contents.set(3, columnFishingRod, ClickableItem.empty(fishingRod));
+                            }
+                            if(columnFishingRod == columnItemCaught){
+                                score += itemCaught.scoreToRemove + (itemCaught.scoreToAdd / 10);
+                            }
+                            if(state % (itemCaught.removeAfterTime * 20) == 0){
+                                score -= itemCaught.scoreToRemove;
                             }
                             if(state % (itemCaught.moveAfterTime * 20) == 0){
                                 for(int column = 1; column < 8; column++){ // Getting the column of the itemCaught.
-                                    if(contents.get(4, column).get().getItem().isSimilar(itemCaught.getItemStack())){
+                                    if(contents.get(4, column).get().getItem().isSimilar(itemCaught.itemStack)){
                                         columnItemCaught = column;
                                     }
                                 }
@@ -151,7 +224,7 @@ public class Listeners implements Listener {
                                         .setDisplayName(ChatColor.DARK_AQUA + "Slot de déplacement")
                                         .addLoreLine(ChatColor.AQUA + "L'objet peut se déplacer ici.")
                                         .build()));
-                                contents.set(4, Utils.randomMinMax(columnItemCaught == 1 ? 1 : columnItemCaught - 1, columnItemCaught == 7 ? 7 : columnItemCaught + 1), ClickableItem.empty(itemCaught.getItemStack()));
+                                contents.set(4, Utils.randomMinMax(columnItemCaught == 1 ? 1 : columnItemCaught - 1, columnItemCaught == 7 ? 7 : columnItemCaught + 1), ClickableItem.empty(itemCaught.itemStack));
                             }
                         }
                     })
@@ -160,13 +233,13 @@ public class Listeners implements Listener {
         }
     }
     private enum FishingRewards {
-        RAW_COD(new ItemStack(Material.COD), 100, 10, 10, 3, 3),
-        RAW_SALMON(new ItemStack(Material.SALMON), 150, 15, 15, 3, 3),
-        TROPICAL_FISH(new ItemStack(Material.TROPICAL_FISH), 200, 17, 17, 2, 3),
-        PUFFERFISH(new ItemStack(Material.PUFFERFISH), 125, 10, 10, 2, 3),
-        BOW(new ItemStack(Material.BOW), 175, 15, 17, 2, 2),
-        FISHING_ROD(new ItemStack(Material.FISHING_ROD), 225, 17, 20, 2, 2),
-        GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 20, 22, 1, 2);
+        RAW_COD(new ItemStack(Material.COD), 100, 10, 10, 3, 3, 15),
+        RAW_SALMON(new ItemStack(Material.SALMON), 150, 15, 15, 3, 3, 15),
+        TROPICAL_FISH(new ItemStack(Material.TROPICAL_FISH), 200, 17,  2, 2, 3, 20),
+        PUFFERFISH(new ItemStack(Material.PUFFERFISH), 125, 10,  1,2, 3, 20),
+        BOW(new ItemStack(Material.BOW), 175, 15, 17,  2, 2, 15),
+        FISHING_ROD(new ItemStack(Material.FISHING_ROD), 225, 17, 20, 2, 2, 10),
+        GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 20, 22, 1, 2, 5);
 
         private final ItemStack itemStack;
         private final int scoreToHave; // score to have to gain the item caught
@@ -174,39 +247,17 @@ public class Listeners implements Listener {
         private final int scoreToRemove; // score to remove when the player is not above the item caught
         private final int removeAfterTime;
         private final int moveAfterTime;
-        // removeAfterTime and moveAfterTime are expressed in seconds, the conversion is done automatically
+        private final int chanceToFish;
+        // addAfterTime, removeAfterTime and moveAfterTime are expressed in seconds, the conversion is done automatically
 
-        FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToAdd, int scoreToRemove, int removeAfterTime, int moveAfterTime) {
+        FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToAdd, int scoreToRemove, int removeAfterTime, int moveAfterTime, int chanceToFish) {
             this.itemStack = itemStack;
             this.scoreToHave = scoreToHave;
             this.scoreToAdd = scoreToAdd;
             this.scoreToRemove = scoreToRemove;
             this.removeAfterTime = removeAfterTime;
             this.moveAfterTime = moveAfterTime;
-        }
-
-        public ItemStack getItemStack(){
-            return itemStack;
-        }
-
-        public int getScoreToHave(){
-            return scoreToHave;
-        }
-
-        public int getScoreToAdd() {
-            return scoreToAdd;
-        }
-
-        public int getScoreToRemove() {
-            return scoreToRemove;
-        }
-
-        public int getRemoveAfterTime() {
-            return removeAfterTime;
-        }
-
-        public int getMoveAfterTime() {
-            return moveAfterTime;
+            this.chanceToFish = chanceToFish;
         }
     }
 }
