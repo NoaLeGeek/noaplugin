@@ -169,12 +169,12 @@ public class Listeners implements Listener {
         GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 20, 22, 1, 2);
 
         private final ItemStack itemStack;
-        private final int scoreToHave;
-        private final int scoreToAdd;
-        private final int scoreToRemove; // score is removed when the player is not above the fish
+        private final int scoreToHave; // score to have to gain the item caught
+        private final int scoreToAdd; // score to add when the player is above the item caught
+        private final int scoreToRemove; // score to remove when the player is not above the item caught
         private final int removeAfterTime;
         private final int moveAfterTime;
-        // removeAfterTime and moveAfterTime are exprimed in seconds, the conversion is done automatically
+        // removeAfterTime and moveAfterTime are expressed in seconds, the conversion is done automatically
 
         FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToAdd, int scoreToRemove, int removeAfterTime, int moveAfterTime) {
             this.itemStack = itemStack;
