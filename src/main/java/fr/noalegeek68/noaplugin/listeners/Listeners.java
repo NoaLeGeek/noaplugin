@@ -160,24 +160,26 @@ public class Listeners implements Listener {
         }
     }
     private enum FishingRewards {
-        RAW_COD(new ItemStack(Material.COD), 100, 10, 3, 3),
-        RAW_SALMON(new ItemStack(Material.SALMON), 150, 15, 3, 3),
-        TROPICAL_FISH(new ItemStack(Material.TROPICAL_FISH), 200, 17, 2, 3),
-        PUFFERFISH(new ItemStack(Material.PUFFERFISH), 125, 10, 2, 3),
-        BOW(new ItemStack(Material.BOW), 175, 17, 2, 2),
-        FISHING_ROD(new ItemStack(Material.FISHING_ROD), 225, 20, 2, 2),
-        GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 22, 1, 2);
+        RAW_COD(new ItemStack(Material.COD), 100, 10, 10, 3, 3),
+        RAW_SALMON(new ItemStack(Material.SALMON), 150, 15, 15, 3, 3),
+        TROPICAL_FISH(new ItemStack(Material.TROPICAL_FISH), 200, 17, 17, 2, 3),
+        PUFFERFISH(new ItemStack(Material.PUFFERFISH), 125, 10, 10, 2, 3),
+        BOW(new ItemStack(Material.BOW), 175, 15, 17, 2, 2),
+        FISHING_ROD(new ItemStack(Material.FISHING_ROD), 225, 17, 20, 2, 2),
+        GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 20, 22, 1, 2);
 
         private final ItemStack itemStack;
         private final int scoreToHave;
-        private final int scoreToRemove;
+        private final int scoreToAdd;
+        private final int scoreToRemove; // score is removed when the player is not above the fish
         private final int removeAfterTime;
         private final int moveAfterTime;
         // removeAfterTime and moveAfterTime are exprimed in seconds, the conversion is done automatically
 
-        FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToRemove, int removeAfterTime, int moveAfterTime) {
+        FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToAdd, int scoreToRemove, int removeAfterTime, int moveAfterTime) {
             this.itemStack = itemStack;
             this.scoreToHave = scoreToHave;
+            this.scoreToAdd = scoreToAdd;
             this.scoreToRemove = scoreToRemove;
             this.removeAfterTime = removeAfterTime;
             this.moveAfterTime = moveAfterTime;
@@ -189,6 +191,10 @@ public class Listeners implements Listener {
 
         public int getScoreToHave(){
             return scoreToHave;
+        }
+
+        public int getScoreToAdd() {
+            return scoreToAdd;
         }
 
         public int getScoreToRemove() {
