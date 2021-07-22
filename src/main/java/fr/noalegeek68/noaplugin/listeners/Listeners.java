@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,6 +27,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Random;
 
 public class Listeners implements Listener {
     @EventHandler
@@ -83,8 +84,6 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
         if(event.getState() == PlayerFishEvent.State.CAUGHT_FISH){
             event.setCancelled(true);
-            ItemStack fishingRod = player.getItemInHand();
-            Item itemCaught = (Item) event.getCaught();
             SmartInventory fishingGUI = SmartInventory.builder()
                     .manager(NoaPlugin.getManager())
                     .size(6, 9)
@@ -92,6 +91,8 @@ public class Listeners implements Listener {
                     .title("Fishing Game")
                     .id("fishinggame")
                     .provider(new InventoryProvider() {
+                        final ItemStack fishingRod = player.getItemInHand();
+                        final FishingRewards itemCaught = FishingRewards.values()[new Random().nextInt(FishingRewards.values().length)];
                         int posFishingRod = 4;
                         int columnItemCaught = 4;
                         @Override
@@ -140,7 +141,7 @@ public class Listeners implements Listener {
                                         .build()));
                                 contents.set(3, posFishingRod, ClickableItem.empty(fishingRod));
                             }
-                            if(state % 60 == 0){
+                            if(state % (itemCaught.moveAfterTime * 20) == 0){
                                 for(int column = 1; column < 8; column++){ // Getting the column of the itemCaught.
                                     if(contents.get(4, column).get().getItem().isSimilar(itemCaught.getItemStack())){
                                         columnItemCaught = column;
@@ -156,6 +157,50 @@ public class Listeners implements Listener {
                     })
                     .build();
             fishingGUI.open(player);
+        }
+    }
+    private enum FishingRewards {
+        RAW_COD(new ItemStack(Material.COD), 100, 10, 3, 3),
+        RAW_SALMON(new ItemStack(Material.SALMON), 150, 15, 3, 3),
+        TROPICAL_FISH(new ItemStack(Material.TROPICAL_FISH), 200, 17, 2, 3),
+        PUFFERFISH(new ItemStack(Material.PUFFERFISH), 125, 10, 2, 3),
+        BOW(new ItemStack(Material.BOW), 175, 17, 2, 2),
+        FISHING_ROD(new ItemStack(Material.FISHING_ROD), 225, 20, 2, 2),
+        GOLD_BLOCK(new ItemStack(Material.GOLD_BLOCK), 250, 22, 1, 2);
+
+        private final ItemStack itemStack;
+        private final int scoreToHave;
+        private final int scoreToRemove;
+        private final int removeAfterTime;
+        private final int moveAfterTime;
+        // removeAfterTime and moveAfterTime are exprimed in seconds, the conversion is done automatically
+
+        FishingRewards(ItemStack itemStack, int scoreToHave, int scoreToRemove, int removeAfterTime, int moveAfterTime) {
+            this.itemStack = itemStack;
+            this.scoreToHave = scoreToHave;
+            this.scoreToRemove = scoreToRemove;
+            this.removeAfterTime = removeAfterTime;
+            this.moveAfterTime = moveAfterTime;
+        }
+
+        public ItemStack getItemStack(){
+            return itemStack;
+        }
+
+        public int getScoreToHave(){
+            return scoreToHave;
+        }
+
+        public int getScoreToRemove() {
+            return scoreToRemove;
+        }
+
+        public int getRemoveAfterTime() {
+            return removeAfterTime;
+        }
+
+        public int getMoveAfterTime() {
+            return moveAfterTime;
         }
     }
 }
