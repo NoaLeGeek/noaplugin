@@ -118,13 +118,6 @@ public class Listeners implements Listener {
                                         e.setCancelled(true);
                                         columnFishingRod--;
                                     }));
-                            contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
-                                    .setDisplayName(ChatColor.GOLD + "Informations")
-                                    .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
-                                    .addLoreLine(ChatColor.YELLOW + String.valueOf((score / 20) * 100 / itemCaught.secondsToHave))
-                                    .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                    .addLoreLine(ChatColor.YELLOW + String.valueOf(itemCaught.chanceToFish) + "%")
-                                    .build()));
                             contents.set(1, 5, ClickableItem.of(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
                                             .setDisplayName(ChatColor.DARK_BLUE + "Droite")
                                             .addLoreLine(ChatColor.BLUE + "En appuyant sur cet item,")
