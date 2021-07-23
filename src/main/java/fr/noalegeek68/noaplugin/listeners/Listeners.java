@@ -150,7 +150,6 @@ public class Listeners implements Listener {
                                     player.getInventory().addItem(itemCaught.itemStack);
                                 }
                             }
-                            //TODO là y'a un bug, ça met que la vitre rouge alors que le pourcentage n'est pas en-dessous de 21.
                             if (percentage >= 21) {
                                 if (percentage >= 41) {
                                     if (percentage >= 61) {
