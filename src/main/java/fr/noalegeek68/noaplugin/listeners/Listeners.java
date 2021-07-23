@@ -136,6 +136,8 @@ public class Listeners implements Listener {
                         public void update(Player player, InventoryContents contents) {
                             int state = contents.property("state", 0);
                             contents.setProperty("state", state + 1);
+                            int notSameColumn = contents.property("notSameColumn", 0);
+                            contents.setProperty("notSameColumn", 0);
                             int percentage = (score / 5) * 100 / itemCaught.secondsToHave;
                             if (percentage <= 0) { // Lose the item caught
                                 player.closeInventory();
@@ -158,16 +160,12 @@ public class Listeners implements Listener {
                                                     .setDisplayName(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "Informations")
                                                     .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
                                                     .addLoreLine(ChatColor.DARK_GREEN + String.valueOf(percentage))
-                                                    .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                                    .addLoreLine(ChatColor.DARK_GREEN + String.valueOf(itemCaught.chanceToFish) + "%")
                                                     .build()));
                                         } else {
                                             contents.set(1, 4, ClickableItem.empty(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
                                                     .setDisplayName(ChatColor.DARK_GREEN + "Informations")
                                                     .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
                                                     .addLoreLine(ChatColor.GREEN + String.valueOf(percentage))
-                                                    .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                                    .addLoreLine(ChatColor.GREEN + String.valueOf(itemCaught.chanceToFish) + "%")
                                                     .build()));
                                         }
                                     } else {
@@ -175,8 +173,6 @@ public class Listeners implements Listener {
                                                 .setDisplayName(ChatColor.GOLD + "Informations")
                                                 .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
                                                 .addLoreLine(ChatColor.YELLOW + String.valueOf(percentage))
-                                                .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                                .addLoreLine(ChatColor.YELLOW + String.valueOf(itemCaught.chanceToFish) + "%")
                                                 .build()));
                                     }
                                 } else {
@@ -184,8 +180,6 @@ public class Listeners implements Listener {
                                             .setDisplayName(ChatColor.RED + "Informations")
                                             .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
                                             .addLoreLine(ChatColor.GOLD + String.valueOf(percentage))
-                                            .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                            .addLoreLine(ChatColor.GOLD + String.valueOf(itemCaught.chanceToFish) + "%")
                                             .build()));
                                 }
                             } else {
@@ -193,8 +187,6 @@ public class Listeners implements Listener {
                                         .setDisplayName(ChatColor.DARK_RED + "Informations")
                                         .addLoreLine(ChatColor.GRAY + "Pourcentage d'avoir l'objet :")
                                         .addLoreLine(ChatColor.RED + String.valueOf(percentage))
-                                        .addLoreLine(ChatColor.GRAY + "Chance d'avoir l'objet :")
-                                        .addLoreLine(ChatColor.RED + String.valueOf(itemCaught.chanceToFish) + "%")
                                         .build()));
                             }
                             if (columnFishingRod >= 8) {
@@ -208,11 +200,14 @@ public class Listeners implements Listener {
                                 contents.set(3, columnFishingRod, ClickableItem.empty(fishingRod));
                             }
                             if (columnFishingRod == columnItemCaught) {
+                                contents.setProperty("notSameColumn", 0);
                                 score += 1;
+                            } else {
+                                contents.setProperty("notSameColumn", notSameColumn + 1);
+                                if(notSameColumn % 10 == 0) {
+                                    score -= itemCaught.secondsToRemove;
+                                }
                             }
-                            /*if (state % (itemCaught.removeAfterTime * 20) == 0) {
-                                score -= itemCaught.secondsToRemove;
-                            }*/
                             if (state % (itemCaught.moveAfterTime * 20) == 0) {
                                 for (int column = 1; column < 8; column++) { // Getting the column of the itemCaught.
                                     if (contents.get(4, column).get().getItem().isSimilar(itemCaught.itemStack)) {
