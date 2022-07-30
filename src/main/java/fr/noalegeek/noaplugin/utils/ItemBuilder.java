@@ -1,4 +1,4 @@
-package fr.noalegeek68.noaplugin.utils;
+package fr.noalegeek.noaplugin.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;

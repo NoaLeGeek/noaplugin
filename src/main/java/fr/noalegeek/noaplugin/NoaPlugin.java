@@ -1,11 +1,9 @@
-package fr.noalegeek68.noaplugin;
+package fr.noalegeek.noaplugin;
 
-import fr.minuskube.inv.InventoryManager;
-import fr.minuskube.inv.SmartInventory;
-import fr.noalegeek68.noaplugin.commands.*;
-import fr.noalegeek68.noaplugin.commands.moderation.ModCommand;
-import fr.noalegeek68.noaplugin.commands.moderation.ReportCommand;
-import fr.noalegeek68.noaplugin.listeners.Listeners;
+import com.comphenix.protocol.ProtocolManager;
+import fr.noalegeek.noaplugin.commands.*;
+import fr.noalegeek.noaplugin.commands.moderation.ReportCommand;
+import fr.noalegeek.noaplugin.listeners.Events;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -15,19 +13,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
 
 public final class NoaPlugin extends JavaPlugin {
 
     public static final String pluginPrefix = String.format("%s[%sNoaPlugin%s] ", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY);
-    public static final ArrayList<UUID> arrayModerators = new ArrayList<>();
     private static NoaPlugin instance;
-    private static InventoryManager manager;
+    private static ProtocolManager protocolManager;
 
     @Override
     public void onLoad() {
         instance = this;
-
+        protocolManager = getManager();
     }
 
     @Override
@@ -35,14 +32,12 @@ public final class NoaPlugin extends JavaPlugin {
         System.out.println("[NoaPlugin] Le plugin a été démarré.");
         registerListeners();
         registerCommands();
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
-        manager = new InventoryManager(this);
-        manager.init();
+        getServer().getPluginManager().registerEvents(new Events(), this);
     }
 
     private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new Listeners(), this);
+        pluginManager.registerEvents(new Events(), this);
     }
 
     public void registerCommands(){
@@ -52,7 +47,6 @@ public final class NoaPlugin extends JavaPlugin {
         registerCommand("craft", new CraftCommand(), "c");
         registerCommand("enderchest", new EnderchestCommand(), "ec");
         registerCommand("invsee", new InvseeCommand(), "is");
-        registerCommand("mod", new ModCommand(), "m");
         registerCommand("report", new ReportCommand(), "r");
     }
 
@@ -69,5 +63,5 @@ public final class NoaPlugin extends JavaPlugin {
 
     public static NoaPlugin getInstance(){ return instance; }
     public static String getPermission(){ return "noaplugin."; }
-    public static InventoryManager getManager(){ return manager; }
+    public static ProtocolManager getManager(){ return protocolManager; }
 }

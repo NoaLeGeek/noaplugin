@@ -1,38 +1,80 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 plugins {
     id 'java'
-    id "com.github.johnrengelman.shadow" version "5.1.0"
+    id 'kr.entree.spigradle' version '2.3.4'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'de.undercouch.download' version '5.0.2'
 }
 
-group = 'fr.noalegeek68'
-version = '1.0-SNAPSHOT'
+//apply from: rootProject.file('buildtools.gradle')
+apply from: rootProject.file('specialSource.gradle')
 
-sourceCompatibility = targetCompatibility = 1.8
-compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = 'UTF-8'
+group 'fr.sunderia'
+version '1.0-SNAPSHOT'
+
+tasks.prepareSpigotPlugins.dependsOn shadowJar
+tasks.runSpigot.dependsOn prepareSpigotPlugins
+String mcVersion = '1.18.1'
+
+shadowJar {
+    configurations = [project.configurations.runtimeClasspath, project.configurations.shadow]
+}
+
+afterEvaluate {
+    shadowJar {
+        doLast {
+            def outputFiles = outputs.files.files
+            for (inputFile in outputFiles) {
+                File intermediateFile = new File(temporaryDir, inputFile.name.replace('.jar', '-obf.jar'))
+                File outputFile = inputFile
+                remapMojangToSpigot(inputFile, intermediateFile, outputFile, "1.18.1-R0.1-SNAPSHOT")
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    protocolLib()
     maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        name = "Jeff"
+        url = 'https://hub.jeff-media.com/nexus/repository/jeff-media-public/'
     }
     maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
+        name = "mine-maven"
+        url = 'https://maven.galaxyfight.fr/snapshots'
     }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
-    compileOnly 'org.jetbrains:annotations:21.0.1'
-    compile 'fr.minuskube.inv:smart-invs:1.2.7'
+    compileOnly("org.spigotmc:spigot-api:$mcVersion-R0.1-SNAPSHOT")
+    compileOnly "org.spigotmc:spigot:$mcVersion-R0.1-SNAPSHOT:remapped-mojang"
+    compileOnly protocolLib('4.8.0')
+    shadow 'fr.sunderia:SunderiaUtils:1.5.4-SNAPSHOT'
 }
 
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
+spigot {
+    name = 'SunderiaSkyblock'
+    version = mcVersion
+    depends('ProtocolLib')
+    permissions {
+        'sunderiaskyblock.visibleholo' {
+            description = 'Allows to use the visibleholo command.'
+            defaults = 'op'
+        }
+        'sunderiaskyblock.test' {
+            description = 'Allows to use the test command.'
+            defaults = 'op'
+        }
     }
+    debug {
+        args '--nojline', '--max-players', '4'
+        jvmArgs '-Xmx4G'
+        serverPort 25565
+        eula = true
+    }
+    authors 'noalegeek68', 'minemobs'
+    apiVersion '1.18'
 }
 
 task copyFile(type: Copy){
@@ -41,10 +83,5 @@ task copyFile(type: Copy){
      */
     if(InetAddress.localHost.hostName != "DESKTOP-KN3O4H8") return
     from file("$buildDir/libs/noaplugin-1.0-SNAPSHOT.jar")
-    into file("C:\\Users\\noacr\\OneDrive\\Bureau\\NoaPlugin serveur\\plugins")
+    into file("D:\\Dossiers perso\\Dossiers\\NoaPlugin serveur\\plugins")
 }
-
-shadowJar{
-    archiveClassifier = ""
-}
-shadowJar.finalizedBy(copyFile)

@@ -1,7 +1,7 @@
 name: NoaPlugin
 version: @version@
 main: fr.noalegeek68.noaplugin.NoaPlugin
-api-version: 1.17
+api-version: 1.16
 authors: [NoaLeGeek68]
 commands:
   alert:

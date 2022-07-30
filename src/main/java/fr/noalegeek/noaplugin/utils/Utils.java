@@ -1,4 +1,4 @@
-package fr.noalegeek68.noaplugin.utils;
+package fr.noalegeek.noaplugin.utils;
 
 import java.util.Random;
 

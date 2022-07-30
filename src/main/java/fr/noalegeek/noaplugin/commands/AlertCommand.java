@@ -1,7 +1,7 @@
-package fr.noalegeek68.noaplugin.commands;
+package fr.noalegeek.noaplugin.commands;
 
-import fr.noalegeek68.noaplugin.NoaPlugin;
-import fr.noalegeek68.noaplugin.utils.CommandUtils;
+import fr.noalegeek.noaplugin.NoaPlugin;
+import fr.noalegeek.noaplugin.utils.CommandUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,11 +1,11 @@
-package fr.noalegeek68.noaplugin.objects;
+package fr.noalegeek.noaplugin.objects;
 
-import fr.noalegeek68.noaplugin.utils.ItemBuilder;
+import fr.noalegeek.noaplugin.utils.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public enum ItemsGUI {
+public enum Items {
 
     // Items who open GUI
     KITS(new ItemBuilder(Material.CHEST)
@@ -19,7 +19,7 @@ public enum ItemsGUI {
 
     public final ItemStack itemStack;
 
-    ItemsGUI(ItemStack itemStack) {
+    Items(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 }
