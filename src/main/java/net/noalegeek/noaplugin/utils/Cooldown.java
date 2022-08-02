@@ -1,6 +1,6 @@
-package fr.noalegeek.noaplugin.utils;
+package net.noalegeek.noaplugin.utils;
 
-import fr.noalegeek.noaplugin.NoaPlugin;
+import net.noalegeek.noaplugin.NoaPlugin;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
@@ -11,32 +11,12 @@ import java.util.UUID;
  * @author <a href="https://bukkit.org/threads/cooldown-manager.290459/">LCastr0</a>
  */
 public class Cooldown {
-    
-    public enum CooldownType {
-        HEAL_FEED_COMMAND("status", 15),
-        GRAPPLING_HOOK("grappling_hook", 2),
-        ;
-
-        public final String name;
-        public final int defaultTime;
-        
-        CooldownType(String name, int i) {
-            this.name = name;
-            this.defaultTime = i;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
 
     private static final Map<String, Cooldown> cooldowns = new HashMap<>();
-    private long start;
     private final int timeInSeconds;
     private final UUID id;
     private final String cooldownName;
-
+    private long start;
     public Cooldown(UUID id, String cooldownName, int timeInSeconds) {
         this.id = id;
         this.cooldownName = cooldownName;
@@ -52,7 +32,7 @@ public class Cooldown {
     }
 
     public static boolean isInCooldown(UUID id, String cooldownName) {
-        if(getTimeLeft(id, cooldownName) >= 1) {
+        if (getTimeLeft(id, cooldownName) >= 1) {
             return true;
         } else {
             stop(id, cooldownName);
@@ -71,7 +51,7 @@ public class Cooldown {
     public static int getTimeLeft(UUID id, String cooldownName) {
         Cooldown cooldown = getCooldown(id, cooldownName);
         int f = -1;
-        if(cooldown != null) {
+        if (cooldown != null) {
             long now = System.currentTimeMillis();
             long cooldownTime = cooldown.start;
             int totalTime = cooldown.timeInSeconds;
@@ -81,12 +61,31 @@ public class Cooldown {
         return f;
     }
 
+    public static String cooldownMessage(UUID uuid, CooldownType type) {
+        return NoaPlugin.pluginPrefix + ChatColor.RED + "Please wait " + ChatColor.GOLD + getTimeLeft(uuid, type.name) + ChatColor.RED + " before doing that !";
+    }
+
     public void start() {
         this.start = System.currentTimeMillis();
         cooldowns.put(this.id.toString() + this.cooldownName, this);
     }
 
-    public static String cooldownMessage(UUID uuid, CooldownType type) {
-        return NoaPlugin.pluginPrefix + ChatColor.RED + "Please wait " + ChatColor.GOLD + getTimeLeft(uuid, type.name) + ChatColor.RED + " before doing that !";
+    public enum CooldownType {
+        HEAL_FEED_COMMAND("status", 15),
+        GRAPPLING_HOOK("grappling_hook", 2),
+        ;
+
+        public final String name;
+        public final int defaultTime;
+
+        CooldownType(String name, int i) {
+            this.name = name;
+            this.defaultTime = i;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

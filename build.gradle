@@ -5,10 +5,10 @@ plugins {
     id 'de.undercouch.download' version '5.0.2'
 }
 
-//apply from: rootProject.file('buildtools.gradle')
+apply from: rootProject.file('buildtools.gradle')
 apply from: rootProject.file('specialSource.gradle')
 
-group 'fr.sunderia'
+group 'net.noalegeek.noaplugin.NoaPlugin'
 version '1.0-SNAPSHOT'
 
 tasks.prepareSpigotPlugins.dependsOn shadowJar
@@ -54,7 +54,6 @@ dependencies {
 }
 
 spigot {
-    name = 'SunderiaSkyblock'
     version = mcVersion
     depends('ProtocolLib')
     permissions {
@@ -73,15 +72,6 @@ spigot {
         serverPort 25565
         eula = true
     }
-    authors 'noalegeek68', 'minemobs'
+    authors 'noalegeek', 'minemobs'
     apiVersion '1.18'
-}
-
-task copyFile(type: Copy){
-    /**
-     * Check if it's noalegeek68's computer
-     */
-    if(InetAddress.localHost.hostName != "DESKTOP-KN3O4H8") return
-    from file("$buildDir/libs/noaplugin-1.0-SNAPSHOT.jar")
-    into file("D:\\Dossiers perso\\Dossiers\\NoaPlugin serveur\\plugins")
 }
