@@ -4,6 +4,7 @@ import fr.sunderia.sunderiautils.commands.CommandInfo;
 import fr.sunderia.sunderiautils.commands.PluginCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -22,15 +23,14 @@ public class AlertCommand extends PluginCommand {
     }
 
     @Override
-    public void onCommand(@NotNull Player player, String[] args) {
+    public void onCommand(@NotNull CommandSender sender, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "Syntax of /" + getName() + ":\n" +
+            sender.sendMessage(ChatColor.RED + "Syntax of /" + getName() + ":\n" +
                     ChatColor.RESET + getUsage() + "\n" +
                     ChatColor.DARK_GRAY + "<message>" + ChatColor.GRAY + " The message that will be sent to all the players in the server");
             return;
         }
-        //TODO Add a title
-        player.getServer()
+        sender.getServer()
                 .getOnlinePlayers()
                 .forEach(onlinePlayer -> onlinePlayer.sendTitle(ChatColor.BOLD + "" + ChatColor.DARK_RED + "ALERT", ChatColor.RED + "Look in the chat", 0, 75, 0));
         Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "" + ChatColor.BOLD + "ALERT" + ChatColor.DARK_GRAY + "] " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', String.join(" ", args)));
