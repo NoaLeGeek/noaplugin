@@ -11,6 +11,8 @@ apply from: rootProject.file('specialSource.gradle')
 group 'net.noalegeek.noaplugin.NoaPlugin'
 version '1.0-SNAPSHOT'
 
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+
 tasks.prepareSpigotPlugins.dependsOn shadowJar
 tasks.runSpigot.dependsOn prepareSpigotPlugins
 String mcVersion = '1.18.1'
@@ -33,6 +35,9 @@ afterEvaluate {
 }
 
 repositories {
+    maven {
+        url "https://maven.galaxyfight.fr/snapshots/"
+    }
     mavenCentral()
     mavenLocal()
     protocolLib()
@@ -40,17 +45,13 @@ repositories {
         name = "Jeff"
         url = 'https://hub.jeff-media.com/nexus/repository/jeff-media-public/'
     }
-    maven {
-        name = "mine-maven"
-        url = 'https://maven.galaxyfight.fr/snapshots'
-    }
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$mcVersion-R0.1-SNAPSHOT")
     compileOnly "org.spigotmc:spigot:$mcVersion-R0.1-SNAPSHOT:remapped-mojang"
     compileOnly protocolLib('4.8.0')
-    shadow 'fr.sunderia:SunderiaUtils:1.5.4-SNAPSHOT'
+    shadow 'fr.sunderia:SunderiaUtils:1.5.6-SNAPSHOT'
 }
 
 spigot {

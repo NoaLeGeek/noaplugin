@@ -1,6 +1,7 @@
 package net.noalegeek.noaplugin.objects;
 
 import fr.sunderia.sunderiautils.SunderiaUtils;
+import fr.sunderia.sunderiautils.utils.DepInventoryBuilder;
 import fr.sunderia.sunderiautils.utils.InventoryBuilder;
 import fr.sunderia.sunderiautils.utils.ItemBuilder;
 import fr.sunderia.sunderiautils.utils.ItemStackUtils;
@@ -16,17 +17,17 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Inventories {
-    public static final Inventory CRAFTING_GUI = new InventoryBuilder("Crafting Table", new InventoryBuilder.Shape("""
+    public static final Inventory CRAFTING_GUI = new DepInventoryBuilder("Crafting Table", new DepInventoryBuilder.Shape("""
             BBBBBBBBB
             B   BBBBB
             B   BNBBB
             B   BBBBB
             BBBBBBBBB
             RRRRERRRR
-            """, Map.of('B', new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).hideIdentifier().setDisplayName(" ").build(),
-            'R', new ItemBuilder(Material.RED_STAINED_GLASS_PANE).hideIdentifier().setDisplayName(" ").build(),
-            'N', new ItemBuilder(Material.BARRIER).hideIdentifier().setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build(),
-            'E', new ItemBuilder(Material.BARRIER).hideIdentifier().setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Exit").addPersistentDataContainer(SunderiaUtils.key("exit"), PersistentDataType.BYTE, (byte) 1).build())))
+            """, Map.of('B', new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName(" ").build(),
+            'R', new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName(" ").build(),
+            'N', new ItemBuilder(Material.BARRIER).setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build(),
+            'E', new ItemBuilder(Material.BARRIER).setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Exit").addPersistentDataContainer(SunderiaUtils.key("exit"), PersistentDataType.BYTE, (byte) 1).build())))
             .onClick(event -> {
                 //Return if the result slot (24th slot) is empty
                 if (event.getSlot() == 23 && ItemStackUtils.isAirOrNull(event.getCurrentItem()))
@@ -96,7 +97,7 @@ public class Inventories {
                                     .get()
                                     .getAmount());
                         } else {
-                            ItemStack lowestItemStack = new ItemBuilder(Material.BEDROCK).hideIdentifier().setAmount(64).build();
+                            ItemStack lowestItemStack = new ItemBuilder(Material.BEDROCK).setAmount(64).build();
                             int coordinateX = 0;
                             int coordinateY = 0;
                             for (int y = 0; y < 3; y++) {
@@ -160,7 +161,7 @@ public class Inventories {
             })
             .onUpdate(event -> {
                 if (ItemStackUtils.isAirOrNull(event.getInventory().getItem(23)))
-                    event.getInventory().setItem(23, new ItemBuilder(Material.BARRIER).hideIdentifier().setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build());
+                    event.getInventory().setItem(23, new ItemBuilder(Material.BARRIER).setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build());
                 for (Recipe recipe : StreamSupport.stream(Spliterators.spliteratorUnknownSize(Bukkit.recipeIterator(), 0), false)
                         .filter(recipe -> recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe)
                         .toList()) {
@@ -234,9 +235,9 @@ public class Inventories {
                 }
             }
         }
-        inventory.setItem(23, craftable ? recipe.getResult() : new ItemBuilder(Material.BARRIER).hideIdentifier().setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build());
-        InventoryUtils.fillRectangle(inventory, new ItemBuilder(craftable ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE).setDisplayName(" ").hideIdentifier().build(), 6, 1, 6, 4);
-        InventoryUtils.fillRectangle(inventory, new ItemBuilder(craftable ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE).setDisplayName(" ").hideIdentifier().build(), 6, 6, 6, 9);
+        inventory.setItem(23, craftable ? recipe.getResult() : new ItemBuilder(Material.BARRIER).setDisplayName(ChatColor.RESET + "" + ChatColor.RED + "Recipe expected").addPersistentDataContainer(SunderiaUtils.key("recipeExpected"), PersistentDataType.BYTE, (byte) 1).build());
+        InventoryUtils.fillRectangle(inventory, new ItemBuilder(craftable ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE).setDisplayName(" ").build(), 6, 1, 6, 4);
+        InventoryUtils.fillRectangle(inventory, new ItemBuilder(craftable ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE).setDisplayName(" ").build(), 6, 6, 6, 9);
         return craftable;
     }
 

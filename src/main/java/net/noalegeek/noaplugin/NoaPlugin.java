@@ -49,17 +49,17 @@ public class NoaPlugin extends JavaPlugin {
             throw new RuntimeException(e);
         }
         Bukkit.getScheduler().runTaskTimer(this, Events::onSecondEvent, 20, 20);
-        Bukkit.addRecipe(new ShapedRecipe(SunderiaUtils.key("test"), new ItemBuilder(Material.NETHERITE_BLOCK).hideIdentifier().setDisplayName("Heart of Hell").build()).shape("BAB", "AAA", "BAB").setIngredient('A', new RecipeChoice.ExactChoice(new ItemBuilder(Material.NETHERITE_INGOT).hideIdentifier().setAmount(2).build())).setIngredient('B', new RecipeChoice.ExactChoice(new ItemBuilder(Material.NETHERITE_INGOT).setAmount(5).hideIdentifier().build())));
-        Bukkit.addRecipe(new ShapelessRecipe(SunderiaUtils.key("test2"), new ItemBuilder(Material.BEDROCK).hideIdentifier().setDisplayName("Mixed Ores").build()).addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.COPPER_INGOT).hideIdentifier().setAmount(9).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.AMETHYST_SHARD).hideIdentifier().setAmount(8).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.COAL).hideIdentifier().setAmount(7).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.IRON_INGOT).hideIdentifier().setAmount(6).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.GOLD_INGOT).hideIdentifier().setAmount(5).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.REDSTONE).hideIdentifier().setAmount(4).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.LAPIS_LAZULI).hideIdentifier().setAmount(3).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.DIAMOND).hideIdentifier().setAmount(2).build()))
-                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.EMERALD).hideIdentifier().setAmount(1).build())));
-        Bukkit.addRecipe(new ShapedRecipe(SunderiaUtils.key("test3"), new ItemBuilder(Material.PETRIFIED_OAK_SLAB).hideIdentifier().build()).shape("AAA").setIngredient('A', new RecipeChoice.ExactChoice(new ItemBuilder(Material.OAK_SLAB).setAmount(2).hideIdentifier().build())));
+        Bukkit.addRecipe(new ShapedRecipe(SunderiaUtils.key("test"), new ItemBuilder(Material.NETHERITE_BLOCK).setDisplayName("Heart of Hell").build()).shape("BAB", "AAA", "BAB").setIngredient('A', new RecipeChoice.ExactChoice(new ItemBuilder(Material.NETHERITE_INGOT).setAmount(2).build())).setIngredient('B', new RecipeChoice.ExactChoice(new ItemBuilder(Material.NETHERITE_INGOT).setAmount(5).build())));
+        Bukkit.addRecipe(new ShapelessRecipe(SunderiaUtils.key("test2"), new ItemBuilder(Material.BEDROCK).setDisplayName("Mixed Ores").build()).addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.COPPER_INGOT).setAmount(9).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.AMETHYST_SHARD).setAmount(8).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.COAL).setAmount(7).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.IRON_INGOT).setAmount(6).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.GOLD_INGOT).setAmount(5).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.REDSTONE).setAmount(4).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.LAPIS_LAZULI).setAmount(3).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.DIAMOND).setAmount(2).build()))
+                .addIngredient(new RecipeChoice.ExactChoice(new ItemBuilder(Material.EMERALD).setAmount(1).build())));
+        Bukkit.addRecipe(new ShapedRecipe(SunderiaUtils.key("test3"), new ItemBuilder(Material.PETRIFIED_OAK_SLAB).build()).shape("AAA").setIngredient('A', new RecipeChoice.ExactChoice(new ItemBuilder(Material.OAK_SLAB).setAmount(2).build())));
         Bukkit.getScheduler().runTaskTimer(this, this::saveConfig, 6000L, 6000L);
         getLogger().info("[NoaPlugin] Plugin enabled.");
     }
