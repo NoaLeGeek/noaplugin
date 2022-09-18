@@ -5,6 +5,7 @@ import fr.sunderia.sunderiautils.commands.PluginCommand;
 import net.noalegeek.noaplugin.NoaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,23 @@ public class InvseeCommand extends PluginCommand {
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String[] args) {
+        /*
+        /inv -> open(player)
+                /inv <inv> -> open(player, args[0])
+                /inv <inv> <opener> -> open(args[1], args[0])
+                */
+        if(args.length > 2){
+            player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Syntax of /" + getName() + ":\n" +
+                    ChatColor.RESET + getUsage().split("\n")[0] + "\n" +
+                    ChatColor.GRAY + "Open your inventory\n" +
+                    ChatColor.RESET + getUsage().split("\n")[1] + "\n" +
+                    ChatColor.DARK_GRAY + "<playerInventory>" + ChatColor.GRAY + " The specified player's inventory\n" +
+                    ChatColor.RESET + getUsage().split("\n")[2] + "\n" +
+                    ChatColor.DARK_GRAY + "<playerInventory>" + ChatColor.GRAY + " The specified player's inventory\n" +
+                    ChatColor.DARK_GRAY + "<player>" + ChatColor.GRAY + " The player that will open the specified player's inventory");
+            return;
+        }
         switch (args.length) {
-            case 0 -> player.openInventory(player.getInventory());
             case 1, 2 -> {
                 if (Bukkit.getPlayer(args[0]) == null) {
                     player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " isn't online or don't exist.");
@@ -39,14 +55,6 @@ public class InvseeCommand extends PluginCommand {
                 }
                 player.openInventory(Bukkit.getPlayer(args[0]).getInventory());
             }
-            default -> player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + "Syntax of /" + getName() + ":\n" +
-                    ChatColor.RESET + getUsage().split("\n")[0] + "\n" +
-                    ChatColor.GRAY + "Open your inventory\n" +
-                    ChatColor.RESET + getUsage().split("\n")[1] + "\n" +
-                    ChatColor.DARK_GRAY + "<playerInventory>" + ChatColor.GRAY + " The specified player's inventory\n" +
-                    ChatColor.RESET + getUsage().split("\n")[2] + "\n" +
-                    ChatColor.DARK_GRAY + "<playerInventory>" + ChatColor.GRAY + " The specified player's inventory\n" +
-                    ChatColor.DARK_GRAY + "<player>" + ChatColor.GRAY + " The player that will open the specified player's inventory");
         }
     }
 }
