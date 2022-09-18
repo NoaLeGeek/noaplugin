@@ -1,6 +1,3 @@
-# This workflow will build a Java project with Gradle
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -9,19 +6,37 @@ on:
   pull_request:
     branches: [ main ]
 
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        java-version: '8'
-        distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set gradlew executable
+        run: chmod +x gradlew
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run BuildTools
+        uses: SpraxDev/Action-SpigotMC@v4
+        with:
+          versions: '1.18.1'
+          remapped: true
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
