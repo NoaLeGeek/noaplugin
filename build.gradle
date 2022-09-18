@@ -11,7 +11,7 @@ apply from: rootProject.file('specialSource.gradle')
 group 'net.noalegeek.noaplugin.NoaPlugin'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 tasks.prepareSpigotPlugins.dependsOn shadowJar
 tasks.runSpigot.dependsOn prepareSpigotPlugins
