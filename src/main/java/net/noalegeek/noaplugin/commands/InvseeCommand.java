@@ -1,14 +1,22 @@
 package net.noalegeek.noaplugin.commands;
 
+import fr.sunderia.sunderiautils.SunderiaUtils;
 import fr.sunderia.sunderiautils.commands.CommandInfo;
 import fr.sunderia.sunderiautils.commands.PluginCommand;
+import fr.sunderia.sunderiautils.utils.DepInventoryBuilder;
+import fr.sunderia.sunderiautils.utils.ItemBuilder;
 import net.noalegeek.noaplugin.NoaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 @CommandInfo(name = "invsee", usage = "/invsee\n/invsee <playerInventory>\n/invsee <playerInventory> <player>", permission = "noaplugin.invsee", description = "Open your inventory or a player's inventory or a player's inventory for an other player")
 public class InvseeCommand extends PluginCommand {
@@ -39,23 +47,30 @@ public class InvseeCommand extends PluginCommand {
                     ChatColor.DARK_GRAY + "<player>" + ChatColor.GRAY + " The player that will open the specified player's inventory");
             return;
         }
-        switch (args.length) {
-            case 1, 2 -> {
-                if (Bukkit.getPlayer(args[0]) == null) {
+        if(args.length > 0){
+            if (Bukkit.getPlayer(args[0]) == null) {
+                player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " isn't online or don't exist.");
+                return;
+            }
+            if (args.length == 2) {
+                if (Bukkit.getPlayer(args[1]) == null) {
                     player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " isn't online or don't exist.");
                     return;
                 }
-                if (args.length == 2) {
-                    if (Bukkit.getPlayer(args[1]) == null) {
-                        player.sendMessage(NoaPlugin.pluginPrefix + ChatColor.RED + args[0] + " isn't online or don't exist.");
-                        return;
-                    }
-                    Bukkit.getPlayer(args[1]).openInventory(Bukkit.getPlayer(args[0]).getInventory());
-                    return;
-                }
-                player.openInventory(Bukkit.getPlayer(args[0]).getInventory());
             }
         }
+        Player target = args[0] == null ? player : Bukkit.getPlayer(args[0]);
+        (args[1] == null ? player : Bukkit.getPlayer(args[1])).openInventory(new DepInventoryBuilder((player == target ? "Your" : target.getDisplayName() + (target.getDisplayName().endsWith("s") ? "'" : "'s")) + " inventory", new DepInventoryBuilder.Shape("""
+                BBBBPBBBB
+                AAAAAAAAA
+                AAAAAAAAA
+                AAAAAAAAA
+                BAABABAAB
+                AAAAAAAAA
+                """, Map.of('B', new ItemBuilder(Material.BLACK_STAINED_GLASS).setDisplayName(" ").addPersistentDataContainer(SunderiaUtils.key("cancelled"), PersistentDataType.BYTE, (byte) 1).build(),
+                'A', new ItemStack(Material.AIR),
+                'P', new ItemBuilder(Material.PLAYER_HEAD).setHead(target).build()))
+                ).build());
     }
 }
 
