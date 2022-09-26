@@ -5,6 +5,7 @@ import fr.sunderia.sunderiautils.commands.CommandInfo;
 import fr.sunderia.sunderiautils.commands.PluginCommand;
 import fr.sunderia.sunderiautils.utils.DepInventoryBuilder;
 import fr.sunderia.sunderiautils.utils.ItemBuilder;
+import fr.sunderia.sunderiautils.utils.ItemStackUtils;
 import net.noalegeek.noaplugin.NoaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +29,9 @@ public class InvseeCommand extends PluginCommand {
     public InvseeCommand(JavaPlugin plugin) {
         super(plugin);
     }
+
+    public static ItemStack[] guiContents = new ItemStack[40];
+    public static ItemStack[] targetContents = new ItemStack[40];
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String[] args) {
@@ -69,8 +73,16 @@ public class InvseeCommand extends PluginCommand {
                 AAAAAAAAA
                 """, Map.of('B', new ItemBuilder(Material.BLACK_STAINED_GLASS).setDisplayName(" ").addPersistentDataContainer(SunderiaUtils.key("cancelled"), PersistentDataType.BYTE, (byte) 1).build(),
                 'A', new ItemStack(Material.AIR),
-                'P', new ItemBuilder(Material.PLAYER_HEAD).setHead(target).build()))
-                ).build());
+                'P', new ItemBuilder(Material.PLAYER_HEAD).setDisplayName(ChatColor.RESET + "" + ChatColor.DARK_GRAY + (player == target ? "You" : target.getDisplayName())).setHead(target).build())))
+                .onClick(event -> {
+                    if(ItemStackUtils.hasPersistentDataContainer(event.getCurrentItem(), SunderiaUtils.key("cancelled"), PersistentDataType.BYTE))
+                        return;
+                })
+                .onUpdate(event -> {
+                    //
+
+                }, 0, 0)
+                .build());
     }
 }
 
