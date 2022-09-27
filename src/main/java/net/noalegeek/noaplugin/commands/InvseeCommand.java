@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @CommandInfo(name = "invsee", usage = "/invsee\n/invsee <playerInventory>\n/invsee <playerInventory> <player>", permission = "noaplugin.invsee", description = "Open your inventory or a player's inventory or a player's inventory for an other player")
 public class InvseeCommand extends PluginCommand {
@@ -82,6 +83,16 @@ public class InvseeCommand extends PluginCommand {
                 .onUpdate(event -> {
                     //Register the new contents of guiContents and targetContents
                     targetContents = Arrays.stream(target.getInventory().getContents()).map(itemStack -> itemStack == null ? new ItemStack(Material.AIR) : itemStack).toArray(ItemStack[]::new);
+                    IntStream.range(0, 54).forEach(slot -> {
+                        guiContents[switch (slot){
+                            case 36 -> 39;
+                            case 37 -> 38;
+                            case 38 -> 37;
+                            case 39 -> 36;
+                            case 40 -> 35;
+                            default -> slot > 45 ? slot - 45 : slot;
+                        }] = event.getInventory().getItem(slot) == null ? new ItemStack(Material.AIR) : event.getInventory().getItem(slot);
+                    });
                 }, 0, 0)
                 .build());
     }
