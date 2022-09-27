@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @CommandInfo(name = "invsee", usage = "/invsee\n/invsee <playerInventory>\n/invsee <playerInventory> <player>", permission = "noaplugin.invsee", description = "Open your inventory or a player's inventory or a player's inventory for an other player")
@@ -79,8 +80,8 @@ public class InvseeCommand extends PluginCommand {
                         return;
                 })
                 .onUpdate(event -> {
-                    //
-
+                    //Register the new contents of guiContents and targetContents
+                    targetContents = Arrays.stream(target.getInventory().getContents()).map(itemStack -> itemStack == null ? new ItemStack(Material.AIR) : itemStack).toArray(ItemStack[]::new);
                 }, 0, 0)
                 .build());
     }
