@@ -19,6 +19,6 @@ public class TestCommand extends PluginCommand {
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String[] args) {
-        //TEST commit
+
     }
 }
