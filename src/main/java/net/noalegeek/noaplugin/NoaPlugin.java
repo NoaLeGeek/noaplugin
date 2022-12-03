@@ -13,12 +13,20 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class NoaPlugin extends JavaPlugin {
 
     public static final String pluginPrefix = String.format("%s[%sNoaPlugin%s] ", ChatColor.GRAY, ChatColor.DARK_GRAY, ChatColor.GRAY);
     private static NoaPlugin instance;
     private static ProtocolManager protocolManager;
+
+    // Temporary variable that will be changed when the skills will be implemented
+    public static final List<Long> temporaryXpNeeded = IntStream.range(0, 51)
+            .mapToLong(level -> Math.round(75 * Math.pow(1.25, level)))
+            .boxed()
+            .toList();
 
     public static NoaPlugin getInstance() {
         return instance;

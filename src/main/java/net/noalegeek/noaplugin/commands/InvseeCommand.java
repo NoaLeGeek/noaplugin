@@ -10,8 +10,8 @@ import net.noalegeek.noaplugin.NoaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +32,9 @@ public class InvseeCommand extends PluginCommand {
         super(plugin);
     }
 
-    public static ItemStack[] guiContents = new ItemStack[40];
+    //Create a ItemStack array with 54 elements because invsee's inventory is a double chest inventory
+    public static ItemStack[] guiContents = new ItemStack[54];
+    //Create a ItemStack array with 40 elements because Inventory#getContents()
     public static ItemStack[] targetContents = new ItemStack[40];
 
     @Override
@@ -81,9 +83,22 @@ public class InvseeCommand extends PluginCommand {
                         return;
                 })
                 .onUpdate(event -> {
+                    //Update guiContents if targetContents is updated
+                    if(targetContents != Arrays.stream(target.getInventory().getContents())
+                            .map(itemStack -> itemStack == null ? new ItemStack(Material.AIR) : itemStack)
+                            .toArray(ItemStack[]::new)){
+
+                    }
+                    //Update targetContents if guiContents is updated
+                    else if(guiContents != Arrays.stream(event.getInventory().getContents())
+                            .map(itemStack -> itemStack == null ? new ItemStack(Material.AIR) : itemStack)
+                            .toArray(ItemStack[]::new)){
+
+                    }
                     //Register the new contents of guiContents and targetContents
                     targetContents = Arrays.stream(target.getInventory().getContents()).map(itemStack -> itemStack == null ? new ItemStack(Material.AIR) : itemStack).toArray(ItemStack[]::new);
                     IntStream.range(0, 54).forEach(slot -> {
+                        if(ItemStackUtils.hasPersistentDataContainer(event.getInventory().getItem(slot), SunderiaUtils.key("cancelled"), PersistentDataType.BYTE)) return;
                         guiContents[switch (slot){
                             case 36 -> 39;
                             case 37 -> 38;
